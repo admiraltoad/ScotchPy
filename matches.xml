@@ -1,0 +1,18 @@
+<root>
+    <entry>
+        <match>fire</match>
+        <to_this>station</to_this>
+    </entry>
+    <entry>
+        <match>fire</match>
+        <to_this>marshall</to_this>
+    </entry>
+    <entry>
+        <match>magic</match>
+        <to_this>mushroom</to_this>
+    </entry>
+    <entry>
+        <match>magic</match>
+        <to_this>trick</to_this>
+    </entry>
+</root>
