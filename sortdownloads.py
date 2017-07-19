@@ -5,34 +5,33 @@ from pymedia import television as tv
 import pyapp
 import os, string, shutil, sys, errno, time, filecmp 
 
-## Global Members
-m_tvshowsDirectory = r'F:\_TVShows'
-m_rootDirectory = os.path.abspath('.') + '\\'
+def get_root_directory():
+    return os.path.abspath('.') + '\\'
 
-def debug(message): 
-    bDebug = False
-    if bDebug:
-        print(message)
+def get_tvshow_path():
+    destination = pyapp.get_config_value('sortdownloads')
+    if destination is None:
+        raise Exception("Definition for <sortdownloads> is missing from config.xml")
+    else:
+        return destination.text
 
-def main(rootDir):
+def sortdownloads(root_directory, tvshow_destination):    
     ## search for video files in the calling (root) directory   
-    for root, directories, filenames in os.walk(rootDir):
+    for root, directories, filenames in os.walk(root_directory):
         for directory in directories:
-            main(os.path.join(rootDir, directory)) 
+            sortdownloads(os.path.join(root_directory, directory), tvshow_destination) 
             
         for filename in filenames:
-            filepath = os.path.join(rootDir, filename)
+            filepath = os.path.join(root_directory, filename)
             if os.path.isfile(filepath):
                 if tv.getFileExtension(filename) in ('avi','mkv','mp4', 'mpg'):
                     ## If its a video file, attempt to format it as a tv show
                     episodeObj = tv.processFilename(filename)   
                     if episodeObj != None:
-                        debug("Processing ["+filename+"] ...")
                         source = filepath
                         new_filename = episodeObj.getFilename() 
-                        tvshow_path = os.path.join(m_tvshowsDirectory,episodeObj.getName(),"Season " + episodeObj.getSeason())
-                        destination = os.path.join(tvshow_path, new_filename) 
-                        debug("[#][01]: "+source.lower()+", "+destination.lower())                        
+                        tvshow_path = os.path.join(tvshow_destination, episodeObj.getName(), "Season " + episodeObj.getSeason())
+                        destination = os.path.join(tvshow_path, new_filename)                         
                         if os.path.normpath(destination.lower()) != os.path.normpath(source.lower()):                         
                             if not os.path.exists(destination):
                                 try:
@@ -42,8 +41,7 @@ def main(rootDir):
                                     print("# moved: " + destination)
                                 except:
                                     print("!! error processing: " + source)
-                            else:
-                                debug("[#][02]: "+source.lower()+", "+destination.lower())  
+                            else: 
                                 if filecmp.cmp(source, destination):
                                     os.remove(source)
                                     print("[-] removed: " + source)  
@@ -52,6 +50,7 @@ def main(rootDir):
                                         os.remove(source)
                                         print("[-] removed: " + source)  
 
-pyapp.print_header("Sort Downloads", 1, 0)
-main(m_rootDirectory)
-sys.exit(0)
+if __name__ == "__main__":
+    pyapp.print_header("Sort Downloads", 1, 1)   
+    sortdownloads(get_root_directory(), get_tvshow_path())
+    sys.exit(0)
