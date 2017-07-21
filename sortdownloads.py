@@ -51,6 +51,6 @@ def sortdownloads(root_directory, tvshow_destination):
                                         print("[-] removed: " + source)  
 
 if __name__ == "__main__":
-    pyapp.print_header("Sort Downloads", 1, 1)   
+    pyapp.print_header("Sort Downloads")   
     sortdownloads(get_root_directory(), get_tvshow_path())
     sys.exit(0)

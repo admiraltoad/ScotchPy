@@ -160,6 +160,6 @@ def main():
             raise
             
 if __name__ == "__main__":    
-    pyapp.print_header("Rename Files", 1, 1)
+    pyapp.print_header("Rename Files")
     main()
     sys.exit(0)
