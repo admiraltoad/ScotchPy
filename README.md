@@ -12,9 +12,18 @@ For each subdirectory under the calling directory move the contents into the par
 
 Searches for video files resurively in the calling directory. Any that are found matching an expected season+episode pattern are moved to the folder specified under <sortdownloads> in the config.xml. Moves files to "<sortdownloads>\Show Name\Season Number\Renamed Video File.avi" 
 
-| argument key | short key | description |
-|:-------------|:---------|:------|:------------|
-| --keep_title  | -k  | Keep the tvshow episode title when sorting downloads. |
+<table>
+<tr>
+<th>argument</th>
+<th>short key</th>
+<th>description</th>
+</tr>
+<tr>
+<td>--keep_title</td>
+<td>-k</td>
+<td>Keep the tvshow episode title when sorting downloads.</td>
+</tr>
+</table>
 
 ---
 
