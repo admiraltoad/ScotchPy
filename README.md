@@ -26,7 +26,7 @@ Searches for video files resurively in the calling directory. Any that are found
 
 renames files in the calling directory based on the provided command arguments.
 
-| argument     | shortcut | input | description |
+| long key     | short key | input | description |
 |:-------------|:---------|:------|:------------|
 | --replace_this | -r | String | Replace this string. |
 | --with_this | -w | String | With this string. | 
