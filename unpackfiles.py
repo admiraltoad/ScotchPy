@@ -1,15 +1,9 @@
 """
-    unpack 1.0
+    Unpack Files
 """
 import pyapp, os, sys, shutil, errno
 
 m_rootDir = os.path.abspath('.') + '\\'
-
-def copyfile(src, dst):
-    try:
-        shutil.copy2(src, dst)
-    except OSError as exc:
-        exc = 0 # ignore		
 
 def main(searchDir):
 	for root, directories, filenames in os.walk(searchDir):
@@ -25,13 +19,13 @@ def main(searchDir):
 							if os.path.isfile(currentFile):
 								print("..  " + filename)
 								destinationFile = os.path.join(searchDir, filename)
-								shutil.copy2(currentFile, destinationFile)
-								os.remove(currentFile);
+								shutil.move(currentFile, destinationFile)								
 								
 					os.rmdir(currentDir)
 				except:
 					print("! Error processing [" + currentDir + "]")
-					
-pyapp.print_header("Unpack", 1, 0)
-main(m_rootDir)
-sys.exit(0)
+
+if __name__ == "__main__":   					
+    pyapp.print_header("Unpack Files")
+    main(m_rootDir)
+    sys.exit(0)

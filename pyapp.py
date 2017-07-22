@@ -5,25 +5,39 @@
 import os, string, shutil, sys, errno 
 from xml.etree import ElementTree as etree
 
-def print_header(name, major, minor):
+## Global Variables 
+major_version = 1
+minor_Version = 1
+
+def print_header(name):
 	print("----------------------------------------------")
-	print(name + " (v" + str(major) + "." + str(minor) + ")")
+	print(name + " (v" + str(major_version) + "." + str(minor_Version) + ")")
 	print("----------------------------------------------")
 
 def get_system_arguments():
     sys_argv = list(sys.argv)
     sys_argv.pop(0) ## remove filepath from the system arguments
     return sys_argv
+
+def get_config_value(key_name):    
+    """ get the key_name node from the config.xml file """
+    filepath = os.path.dirname(os.path.realpath(__file__))
+    config_file = os.path.join(filepath,'config.xml')
+    if not os.path.isfile(config_file):
+        raise Exception("Missing expected [config.xml].")
+        
+    root = etree.parse(config_file).getroot()
+    return root.find(key_name)       
     
 def query_yes_no(question, default=None):
     """Ask a yes/no question via input() and return their answer.
 
-    "question" is a string that is presented to the user.
-    "default" is the presumed answer if the user just hits <Enter>.
+    :question - is a string that is presented to the user.
+    :default - is the presumed answer if the user just hits <Enter>.
         It must be "yes" (the default), "no" or None (meaning
         an answer is required of the user).
 
-    The "answer" return value is True for "yes" or False for "no".
+    :return - True for "yes" or False for "no".
     """
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
