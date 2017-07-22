@@ -23,8 +23,8 @@ class tv_episode():
         return self.info["title"]
     def get_extension(self):
         return self.info["extension"]
-    def get_filename(self, trim_title=False):
-        if trim_title or self.get_title() is None:
+    def get_filename(self, keep_title=False):
+        if keep_title or self.get_title() is None:
             return "{0} s{1}e{2}.{3}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_extension())
         else:
             return "{0} s{1}e{2} {3}.{4}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_title(), self.get_extension())

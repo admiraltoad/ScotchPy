@@ -20,17 +20,17 @@ def get_arguments():
     ## Define command arguments
     parser = argparse.ArgumentParser(description="Sort Downloads") 
     parser.add_argument(
-        "--trim_title", 
-        "-t", 
+        "--keep_title", 
+        "-k", 
         required=False, 
         action="store_true",
-        help="Remove the tvshow episode title when sorting downloads."
+        help="Keep the tvshow episode title when sorting downloads."
         )                
-    parser.set_defaults(trim_title=False)
+    parser.set_defaults(keep_title=False)
  
     return parser.parse_args(args=pyapp.get_system_arguments())
        
-def sortdownloads(search_directory, tvshow_destination, trim_title=False):    
+def sortdownloads(search_directory, tvshow_destination, keep_title=False):    
     ## search for video files in the calling (root) directory   
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
@@ -48,7 +48,7 @@ def sortdownloads(search_directory, tvshow_destination, trim_title=False):
                 
                 if episode_obj is not None:
                     source = filepath
-                    new_filename = episode_obj.get_filename(trim_title)
+                    new_filename = episode_obj.get_filename(keep_title)
                     tvshow_path = os.path.join(tvshow_destination, episode_obj.get_name(), "Season " + episode_obj.get_season())
                     destination = os.path.join(tvshow_path, new_filename)                         
                     if os.path.normpath(destination.lower()) != os.path.normpath(source.lower()):                         
@@ -65,7 +65,7 @@ def sortdownloads(search_directory, tvshow_destination, trim_title=False):
                                 os.remove(source)
                                 print("[-] removed '{0}'".format(source))
                             else:
-                                if pyapp.query_yes_no("'{}' already exists at target location '{}' \n Do you want to delete this file??".format(source, destination)):
+                                if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
                                     os.remove(source)
                                     print("[-] removed '{0}'".format(source))
         
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     try:
         pyapp.print_header("Sort Downloads")   
         args = get_arguments()
-        sortdownloads(get_root_directory(), get_tvshow_path(), args.trim_title)        
+        sortdownloads(get_root_directory(), get_tvshow_path(), args.keep_title)        
                 
         sys.exit(0)
     except Exception as ex:
