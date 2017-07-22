@@ -2,10 +2,6 @@
 
 ## Documentation
 
-###### Python Scripts:
-
----
-
 **unpackfiles.py**
 
 For each subdirectory under the calling directory move the contents into the parent directory and delete the empty subdirectory.
