@@ -7,7 +7,7 @@ from xml.etree import ElementTree as etree
 
 ## Global Variables 
 major_version = 1
-minor_Version = 1
+minor_Version = 0
 
 def print_header(name):
 	print("----------------------------------------------")
