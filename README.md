@@ -12,7 +12,7 @@ For each subdirectory under the calling directory move the contents into the par
 
 Searches for video files resurively in the calling directory. Any that are found matching an expected season+episode pattern are moved to the folder specified under <sortdownloads> in the config.xml. Moves files to "<sortdownloads>\Show Name\Season Number\Renamed Video File.avi" 
 
-| argument     | shortcut | description |
+| argument key | short key | description |
 |:-------------|:---------|:------|:------------|
 | --keep_title  | -k  | Keep the tvshow episode title when sorting downloads. |
 
@@ -22,7 +22,7 @@ Searches for video files resurively in the calling directory. Any that are found
 
 renames files in the calling directory based on the provided command arguments.
 
-| long key     | short key | description |
+| argument key | short key | description |
 |:-------------|:---------|:------|:------------|
 | --replace_this | -r | Replace this string. |
 | --with_this | -w | With this string. | 
