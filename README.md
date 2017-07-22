@@ -14,9 +14,9 @@ Searches for video files resurively in the calling directory. Any that are found
 
 <table>
 <tr>
-<th style="width:20%">argument</th>
-<th style="width:30%">short key</th>
-<th style="width:50%">description</th>
+<th style="width:30%">argument</th>
+<th style="width:15%">short key</th>
+<th style="width:55%">description</th>
 </tr>
 <tr>
 <td>--keep_title</td>
@@ -31,15 +31,20 @@ Searches for video files resurively in the calling directory. Any that are found
 
 renames files in the calling directory based on the provided command arguments.
 
-| argument key | short key | description |
-|:-------------|:---------|:------|:------------|
-| --replace_this | -r | Replace this string. |
-| --with_this | -w | With this string. | 
-| --repeat | -c | Repeat the operation this many times.|
-| --recursive | -v | Replace filenames in root directory and all subfolders. |
-| --starts_with | -s | Replace first instance if the filename starts with [--replace_this/-r] string. |
-| --ends_with | -e | Replace last instance if the filename ends with [--replace_this/-r] string. |
-| --preset | -p | Run the preset formatting for files. Must be the first given argument. |
+<table>
+<tr>
+<th style="width:30%">argument</th>
+<th style="width:15%">short key</th>
+<th style="width:55%">description</th>
+</tr>
+<tr><td>--replace_this</td><td>-r</td><td>Replace this string.</td></tr>
+<tr><td>--with_this</td><td>-w</td><td>With this string. </td></tr>
+<tr><td>--repeat</td><td>-c</td><td>Repeat this many times.</td></tr>
+<tr><td>--recursive</td><td>-v</td><td>Replace in calling directory recursively.</td></tr>
+<tr><td>--starts_with</td><td>-s</td><td>Replace if the filename starts with [--replace_this/-r] string.</td></tr>
+<tr><td>--ends_with</td><td>-e</td><td>Replace if the filename ends with [--replace_this/-r] string.</td></tr>
+<tr><td>--preset</td><td>-p</td><td>Run the preset formatting for files. Must be the first given argument.</td></tr>
+</table>
 
 ### Downloads
  - version 1.0 | [(zip)](https://github.com/admiraltoad/ScotchPy/archive/1.0.zip) | [(tar.gz)](https://github.com/admiraltoad/ScotchPy/archive/1.0.tar.gz) |
