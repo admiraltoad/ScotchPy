@@ -14,9 +14,9 @@ Searches for video files resurively in the calling directory. Any that are found
 
 <table>
 <tr>
-<th style="width:30%">argument</th>
-<th style="width:15%">short key</th>
-<th style="width:55%">description</th>
+<th style="width:25%">argument</th>
+<th style="width:10%">short key</th>
+<th style="width:65%">description</th>
 </tr>
 <tr>
 <td>--keep_title</td>
@@ -33,9 +33,9 @@ renames files in the calling directory based on the provided command arguments.
 
 <table>
 <tr>
-<th style="width:30%">argument</th>
-<th style="width:15%">short key</th>
-<th style="width:55%">description</th>
+<th style="width:25%">argument</th>
+<th style="width:10%">short key</th>
+<th style="width:65%">description</th>
 </tr>
 <tr><td>--replace_this</td><td>-r</td><td>Replace this string.</td></tr>
 <tr><td>--with_this</td><td>-w</td><td>With this string. </td></tr>
