@@ -1,12 +1,16 @@
 <p align="center"><img src="http://i.imgur.com/mqWvEv1.png" style="border: 0px;"></p>
 
-#### Documentation
+## Documentation
 
 ###### Python Scripts:
+
+---
 
 **unpackfiles.py**
 
 For each subdirectory under the calling directory move the contents into the parent directory and delete the empty subdirectory.
+
+---
 
 **sortdownloads.py**
 
@@ -15,6 +19,8 @@ Searches for video files resurively in the calling directory. Any that are found
 | argument | shortcut | input | description |
 |:---------|:---------|:------|:------------|
 | --keep_title  | -k  | None | Keep the tvshow episode title when sorting downloads. |
+
+---
 
 **renamefiles.py**
 
