@@ -70,11 +70,11 @@ def get_season_episode_numbers(season_episode_tag):
     pattern = pattern.replace("s"," ")
     pattern = pattern.replace("e"," ")
     patternArray = pattern.split()
-    seasonNum = int(patternArray[0])
-    episodeNum =  int(patternArray[1])
-    seasonNum = "{:0>2}".format(seasonNum)
-    episodeNum = "{:0>2}".format(episodeNum)
-    return seasonNum, episodeNum
+    season_num = int(patternArray[0])
+    episode_num =  int(patternArray[1])
+    season_num = "{:0>2}".format(season_num)
+    episode_num = "{:0>2}".format(episode_num)
+    return season_num, episode_num
     
 def process_filename(filename):  
     episode_obj = None
