@@ -46,5 +46,5 @@ renames files in the calling directory based on the provided command arguments.
 <tr><td>--preset</td><td>-p</td><td>Run the preset formatting for files. Must be the first given argument.</td></tr>
 </table>
 
-### Downloads
+## Downloads
  - version 1.0 | [(zip)](https://github.com/admiraltoad/ScotchPy/archive/1.0.zip) | [(tar.gz)](https://github.com/admiraltoad/ScotchPy/archive/1.0.tar.gz) |
