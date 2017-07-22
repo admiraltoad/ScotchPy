@@ -5,94 +5,98 @@
 import re, os
 from xml.etree import ElementTree as etree
 
-class tvEpisode():       
-    def __init__(self, name, season, episode, extension):
+class tv_episode():       
+    def __init__(self, name, season, episode, title, extension):
         self.info = {}
-        self.info['name']=name
-        self.info['season']=season
-        self.info['episode']=episode
-        self.info['extension']=extension
-        self.info['filename']=name+" "+"s"+season+"e"+episode+"."+extension
-    def getName(self):
-        return self.info['name']
-    def getSeason(self):
-        return self.info['season']
-    def getEpisode(self):
-        return self.info['episode']
-    def getExtension(self):
-        return self.info['extension']
-    def getFilename(self):
-        return self.info['filename']
+        self.info["name"]=name
+        self.info["season"]=season
+        self.info["episode"]=episode
+        self.info["title"]= None if (title=="") else title
+        self.info["extension"]=extension
+    def get_name(self):
+        return self.info["name"]
+    def get_season(self):
+        return self.info["season"]
+    def get_episode(self):
+        return self.info["episode"]
+    def get_title(self):
+        return self.info["title"]
+    def get_extension(self):
+        return self.info["extension"]
+    def get_filename(self, trim_title=False):
+        if trim_title or self.get_title() is None:
+            return "{0} s{1}e{2}.{3}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_extension())
+        else:
+            return "{0} s{1}e{2} {3}.{4}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_title(), self.get_extension())
 
-def findSeasonEpisodePattern(filename): 
-    found = re.search('\ss\d+\se\d+', filename) 
+def find_season_episode_tag(filename): 
+    found = re.search("\ss\d+\se\d+", filename) 
     if not found:
-        found = re.search('\ss\d+e\d+', filename)       
+        found = re.search("\ss\d+e\d+", filename)       
     if not found:
-        found = re.search('\sS\d+\sE\d+', filename) 
+        found = re.search("\sS\d+\sE\d+", filename) 
     if not found:
-        found = re.search('\sS\d+E\d+', filename)       
+        found = re.search("\sS\d+E\d+", filename)       
     if not found:
-        found = re.search('\sS\d+\se\d+', filename) 
+        found = re.search("\sS\d+\se\d+", filename) 
     if not found:
-        found = re.search('\sS\d+e\d+', filename)
+        found = re.search("\sS\d+e\d+", filename)
     if not found:
-        found = re.search('\ss\d+\sE\d+', filename)
+        found = re.search("\ss\d+\sE\d+", filename)
     if not found:
-        found = re.search('\ss\d+E\d+', filename)
+        found = re.search("\ss\d+E\d+", filename)
     return found
 
-def getTVShowItems():
+def get_tvshow_items():
     filepath = os.path.dirname(os.path.realpath(__file__))
-    tree = etree.parse(os.path.join(filepath,'tvshow.match.xml'))
+    tree = etree.parse(os.path.join(filepath,"tvshow.match.xml"))
     root = tree.getroot()   
-    return root.iter('item')
+    return root.iter("item")
     
-def processTVShowName(tvshowname):
-    tvshowname = tvshowname.title()
-    tvshowMatch = None
-    for item in getTVShowItems():       
-        name = item.find('name').text
-        if name.lower() == tvshowname.lower():
-            tvshowMatch = item.find('match').text
+def process_tvshow_name(tvshow_name):
+    tvshow_match = None
+    for item in get_tvshow_items():       
+        name = item.find("name").text
+        if name.lower() == tvshow_name.lower():
+            tvshow_match = item.find("match").text
             break
-    if tvshowMatch:
-        tvshowname = tvshowMatch        
-    return tvshowname   
+    if tvshow_match is not None:
+        tvshow_name = tvshow_match        
+    return tvshow_name   
    
-def getSeasonEpisodeNumbers(episodeString):
-    pattern = episodeString
+def get_season_episode_numbers(season_episode_tag):
+    pattern = season_episode_tag
     pattern = pattern.lower()
-    pattern = pattern.replace('s',' ')
-    pattern = pattern.replace('e',' ')
+    pattern = pattern.replace("s"," ")
+    pattern = pattern.replace("e"," ")
     patternArray = pattern.split()
     seasonNum = int(patternArray[0])
     episodeNum =  int(patternArray[1])
     seasonNum = "{:0>2}".format(seasonNum)
     episodeNum = "{:0>2}".format(episodeNum)
     return seasonNum, episodeNum
-
-def getShowName(filename, episodeString):
-    patternIDX = int(filename.find(episodeString))
-    showname = (filename[:patternIDX]).strip() 
-    showname = showname.replace(' -', '')
-    showname = processTVShowName(showname)
-    return showname
     
-def getFileExtension(filename):
-    return filename[-3:]
-
-def processFilename(filename):  
-    episodeObj = None
-    newfilename = filename.replace('.',' ')
-    patternFound = findSeasonEpisodePattern(newfilename)
-    if patternFound:
-        episodeString = patternFound.group(0).strip()       
-        showname = getShowName(newfilename, episodeString)
-        showname = processTVShowName(showname)
-        season, episode = getSeasonEpisodeNumbers(episodeString)
-        extension = getFileExtension(newfilename)
-        episodeObj = tvEpisode(showname, season, episode, extension)
-    return episodeObj
+def process_filename(filename):  
+    episode_obj = None
     
+    extension = filename[-3:]
+    if extension in ('avi','mkv','mp4', 'mpg'):    
+        newfilename = filename.replace("."," ")
+        tag = find_season_episode_tag(newfilename)
+        if tag is not None:
+            season_episode_tag = tag.group(0).strip()            
+            
+            tag_start = int(newfilename.find(season_episode_tag))
+            tag_end = int(tag_start + len(season_episode_tag))
+                    
+            name = (newfilename[:tag_start]).strip()  
+            name = process_tvshow_name(name)      
+            
+            title = (newfilename[tag_end:(len(newfilename)-4)]).strip() 
+                
+            season, episode = get_season_episode_numbers(season_episode_tag)
+                        
+            episode_obj = tv_episode(name, season, episode, title, extension)
+
+    return episode_obj    
         
