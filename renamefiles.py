@@ -10,12 +10,13 @@ def get_root_directory():
     return os.path.abspath(".") + "\\"
     
 def process_presets(search_directory):
-    rename_files(".", " ", 100)
+    rename_files(search_directory, ".", " ", 100)
     filepath = os.path.dirname(os.path.realpath(__file__))
     tree = etree.parse(os.path.join(filepath, "renamefiles.preset.xml"))
     root = tree.getroot()
     for item in root.iter("item"):        
         rename_files(search_directory, item.text)
+    rename_files(search_directory, "  1")
         
 def check_preset():
     system_arguments = pyapp.get_system_arguments()  
