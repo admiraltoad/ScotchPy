@@ -14,9 +14,9 @@ Searches for video files resurively in the calling directory. Any that are found
 
 <table>
 <tr>
-<th>argument</th>
-<th>short key</th>
-<th>description</th>
+<th style="width:20%">argument</th>
+<th style="width:30%">short key</th>
+<th style="width:50%">description</th>
 </tr>
 <tr>
 <td>--keep_title</td>
