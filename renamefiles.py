@@ -1,7 +1,6 @@
 """
     Rename Files
 """
-from pymedia import television as tv
 import pyapp
 import os, string, shutil, sys, errno 
 from xml.etree import ElementTree as etree
@@ -10,11 +9,6 @@ import argparse
 def get_root_directory():
     return os.path.abspath(".") + "\\"
     
-def get_system_arguments():
-    sys_argv = list(sys.argv)
-    sys_argv.pop(0) ## remove filepath from the system arguments
-    return sys_argv
-
 def process_presets(search_directory):
     rename_files(".", " ", 100)
     filepath = os.path.dirname(os.path.realpath(__file__))
@@ -24,18 +18,13 @@ def process_presets(search_directory):
         rename_files(search_directory, item.text)
         
 def check_preset():
-    system_arguments = get_system_arguments()  
+    system_arguments = pyapp.get_system_arguments()  
     if len(system_arguments) > 0:
         if system_arguments[0] == "--preset" or system_arguments[0] == "-p":
             return True
     return False   
-    
-class arguments(object):
-    pass         
 
 def get_arguments():    
-    command_arguments = arguments()
-    
     ## Define command arguments
     parser = argparse.ArgumentParser(description="Rename Files") 
     parser.add_argument(
@@ -87,7 +76,7 @@ def get_arguments():
     parser.set_defaults(replace_this=None, with_this=None, repeat=0, recursive=False, starts_with=False, ends_with=False)
 
     ## Process system arguments    
-    parser.parse_args(args=get_system_arguments(), namespace=command_arguments)
+    command_arguments = parser.parse_args(args=pyapp.get_system_arguments())
     
     ## Error Handling
     if command_arguments.repeat < 0:
@@ -144,22 +133,19 @@ def rename_files(search_directory, replace_this, with_this="", repeat=1, recursi
                     print(" >> " + os.path.join(search_directory, newfile_name))                     
                     newfile_fullpath = os.path.join(search_directory, newfile_name)
                     os.rename(file_fullpath, newfile_fullpath) 
-                    
-def main():  
+
+if __name__ == "__main__":   
     try:
+        pyapp.print_header("Rename Files")
         if check_preset():
             process_presets(get_root_directory());
         else:        
             args = get_arguments()
             if pyapp.query_yes_no("Replace '{0}' with '{1}'?".format(args.replace_this, args.with_this)):
                 rename_files(get_root_directory(), args.replace_this, args.with_this, args.repeat, args.recursive, args.starts_with, args.ends_with)            
+                
+        sys.exit(0)
     except Exception as ex:
-        if len(ex.args) == 1:
-            print("Error:", ex.args[0])       
-        else:
-            raise
-            
-if __name__ == "__main__":    
-    pyapp.print_header("Rename Files")
-    main()
-    sys.exit(0)
+        print("Error:", str(ex), "\n")
+        raise        
+        sys.exit(-1)    
