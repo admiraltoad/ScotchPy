@@ -45,28 +45,28 @@ def get_arguments():
         "-c", 
         required=False, 
         type=int, 
-        help="Repeat the operation this many times."
+        help="Repeat this many times."
         )
     parser.add_argument(
         "--recursive", 
         "-v", 
         required=False, 
         action="store_true",
-        help="Replace filenames in root directory and all subfolders."
+        help="Replace in calling directory recursively."
         )        
     parser.add_argument(
         "--starts_with", 
         "-s", 
         required=False, 
         action="store_true",
-        help="Replace first instance if the filename starts with [--replace_this/-r] string."
+        help="Replace if the filename starts with [--replace_this/-r] string."
         )
     parser.add_argument(
         "--ends_with", 
         "-e", 
         required=False, 
         action="store_true",
-        help="Replace last instance if the filename ends with [--replace_this/-r] string."
+        help="Replace if the filename ends with [--replace_this/-r] string."
         )   
     parser.add_argument(
         "--preset", 

@@ -51,24 +51,23 @@ def sortdownloads(search_directory, tvshow_destination, keep_title=False):
                     new_filename = episode_obj.get_filename(keep_title)
                     tvshow_path = os.path.join(tvshow_destination, episode_obj.get_name(), "Season " + episode_obj.get_season())
                     destination = os.path.join(tvshow_path, new_filename)                         
-                    if os.path.normpath(destination.lower()) != os.path.normpath(source.lower()):                         
-                        if not os.path.exists(destination):
-                            try:
+                    if os.path.normpath(destination.lower()) != os.path.normpath(source.lower()):   
+                        try:
+                            if not os.path.exists(destination):   
                                 if not os.path.isdir(tvshow_path):
                                     os.makedirs(tvshow_path)                                    
                                 shutil.move(source, destination)
-                                print(">> moved '{0}'".format(destination))
-                            except Exception as ex:
-                                raise Exception("!! error processing '{0}'.\n{1}".format(source, str(ex)))
-                        else: 
-                            if filecmp.cmp(source, destination):
-                                os.remove(source)
-                                print("[-] removed '{0}'".format(source))
-                            else:
-                                if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
+                            else: 
+                                if filecmp.cmp(source, destination):
                                     os.remove(source)
                                     print("[-] removed '{0}'".format(source))
-        
+                                else:
+                                    if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
+                                        os.remove(source)
+                                        print("[-] removed '{0}'".format(source))
+                            print(">> moved '{0}'".format(destination))
+                        except Exception as ex:
+                            print("!! error processing '{0}'.\n{1}".format(source, str(ex)))       
         
 
 if __name__ == "__main__":
