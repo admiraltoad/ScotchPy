@@ -8,11 +8,13 @@
     <item>Bluray</item>
     <item>Xvid</item>
     <item>BRRip</item>
+	<item>BRrip</item>	
     <item>HDTV</item>    
     <item>XviD</item>
     <item>MP3</item>
 	<item>unrated</item>
 	<item>Unrated</item>
+	<item>DVDRip</item>	
     <!-- Torrent Tags  -->
     <item>[eztv]</item>
     <item>x264</item>
