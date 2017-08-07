@@ -11,6 +11,8 @@
     <item>HDTV</item>    
     <item>XviD</item>
     <item>MP3</item>
+	<item>unrated</item>
+	<item>Unrated</item>
     <!-- Torrent Tags  -->
     <item>[eztv]</item>
     <item>x264</item>
@@ -30,4 +32,8 @@
     <item>-SVA</item>
     <item>-BATV</item>
     <item>-ViSUM</item>
+	<item>YIFY</item>
+	<item>AC3-EVO</item>	
+	<item>-x0r</item>	
+	<item>BOKUTOX</item>
 </root>
