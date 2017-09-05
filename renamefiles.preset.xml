@@ -11,6 +11,10 @@
     <item>HDTV</item>    
     <item>XviD</item>
     <item>MP3</item>
+    <item>DVDRip</item>
+    <item>MP3</item>
+    <item>HDRip</item>
+    <item>XViD</item>    
     <!-- Torrent Tags  -->
     <item>[eztv]</item>
     <item>x264</item>
@@ -25,9 +29,15 @@
     <item>-RARBG</item>
     <item>DTS-JYK</item>
     <item>AC3-Anarchy</item>
+    <item>AC3-EBX</item>
     <item>-WiKi</item>    
     <item>-MTB</item>    
     <item>-SVA</item>
     <item>-BATV</item>
     <item>-ViSUM</item>
+    <item>-juggs</item>
+    <item>YIFY</item>
+    <item>[ETRG]</item>
+    <item>[YTS AG]</item>
+    <item>-NOGRP</item>
 </root>
