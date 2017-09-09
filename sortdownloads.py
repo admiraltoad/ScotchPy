@@ -105,7 +105,7 @@ def sort_tv(search_directory, tvshow_destination, keep_title=False):
             filepath = os.path.join(search_directory, filename)
             if os.path.isfile(filepath):                
                 ## If its a video file, attempt to format it as a tv show
-                episode_obj = tv.process_filename(filename)  
+                episode_obj = media.process_filename(filename)  
                 
                 if episode_obj is not None:
                     source = filepath
