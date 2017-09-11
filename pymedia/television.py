@@ -76,7 +76,7 @@ def get_season_episode_numbers(season_episode_tag):
     episode_num = "{:0>2}".format(episode_num)
     return season_num, episode_num
 
-def is_media_files(filename):
+def is_media_file(filename):
     extension = filename[-3:]
     return extension in ('avi','mkv','mp4', 'mpg')
     
@@ -84,7 +84,7 @@ def process_filename(filename):
     episode_obj = None
     
     extension = filename[-3:]
-    if is_media_files(filename):    
+    if is_media_file(filename):    
         newfilename = filename.replace("."," ")
         tag = find_season_episode_tag(newfilename)
         if tag is not None:

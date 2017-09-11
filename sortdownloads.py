@@ -3,6 +3,7 @@
 """
 from pymedia import television as media
 import pyapp
+import argparse
 import os, string, shutil, sys, errno, time, filecmp
 
 def get_root_directory():
@@ -20,7 +21,7 @@ def get_arguments():
         ) 
     parser.add_argument(
         "--tv", 
-        "", 
+        "-t", 
         required=False, 
         action="store_true",
         help="Search media files and sort tv episode files."
@@ -52,7 +53,7 @@ def get_tv_path():
     else:
         return destination.text
         
-def sort_movies(search_directory, movie_path):    
+def sort_movies(search_directory, movie_destination):    
     ''' Move video files in search_directory recursively into movie_path. 
         Ignore video files that appear to be tv episodes.
     '''  
@@ -60,7 +61,7 @@ def sort_movies(search_directory, movie_path):
         for directory in directories:
             subdirectory = os.path.join(search_directory, directory)
             if os.path.isdir(subdirectory):
-                sortdownloads(subdirectory, tvshow_destination)
+                sort_movies(subdirectory, movie_destination)
                 if not os.listdir(subdirectory):
                     os.rmdir(subdirectory)            
             
@@ -72,12 +73,12 @@ def sort_movies(search_directory, movie_path):
                 
                 if episode_obj is None and media.is_media_file(filename):
                     source = filepath
-                    destination = os.path.join(movie_path, filename)                       
+                    destination = os.path.join(movie_destination, filename)                       
                     if os.path.normpath(source.lower()) != os.path.normpath(destination.lower()):   
                         try:
                             if not os.path.exists(destination):   
-                                if not os.path.isdir(movie_path):
-                                    os.makedirs(movie_path)                                    
+                                if not os.path.isdir(movie_destination):
+                                    os.makedirs(movie_destination)                                    
                                 shutil.move(source, destination)
                             else: 
                                 if filecmp.cmp(source, destination):
@@ -97,7 +98,7 @@ def sort_tv(search_directory, tvshow_destination, keep_title=False):
         for directory in directories:
             subdirectory = os.path.join(search_directory, directory)
             if os.path.isdir(subdirectory):
-                sortdownloads(subdirectory, tvshow_destination)
+                sort_tv(subdirectory, tvshow_destination)
                 if not os.listdir(subdirectory):
                     os.rmdir(subdirectory)            
             
@@ -138,9 +139,7 @@ if __name__ == "__main__":
         if args.tv:
             sort_tv(get_root_directory(), get_tv_path(), args.keep_title)
         if args.movies:
-            sort_movies(get_root_directory(), get_movie_path())
-        
-        sort_movies(get_root_directory(), get_movie_path())        
+            sort_movies(get_root_directory(), get_movie_path())    
                 
         sys.exit(0)
     except Exception as ex:
