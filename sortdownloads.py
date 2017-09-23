@@ -2,7 +2,7 @@
     Sort Downloads
 """
 from pymedia import television as media
-import pyapp
+import pyapp, renamefiles
 import argparse
 import os, string, shutil, sys, errno, time, filecmp
 
@@ -57,6 +57,7 @@ def sort_movies(search_directory, movie_destination):
     ''' Move video files in search_directory recursively into movie_path. 
         Ignore video files that appear to be tv episodes.
     '''  
+    renamefiles.process_presets(search_directory)
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
             subdirectory = os.path.join(search_directory, directory)
