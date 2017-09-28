@@ -23,8 +23,8 @@ class tv_episode():
         return self.info["title"]
     def get_extension(self):
         return self.info["extension"]
-    def get_filename(self, keep_title=False):
-        if not keep_title or self.get_title() is None:
+    def get_filename(self, remove_title=False):
+        if remove_title or self.get_title() is None:
             return "{0} s{1}e{2}.{3}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_extension())
         else:
             return "{0} s{1}e{2} {3}.{4}".format(self.get_name(), self.get_season(), self.get_episode(), self.get_title(), self.get_extension())
@@ -77,8 +77,19 @@ def get_season_episode_numbers(season_episode_tag):
     return season_num, episode_num
 
 def is_media_file(filename):
-    extension = filename[-3:]
-    return extension in ('avi','mkv','mp4', 'mpg')
+    newfile_name, extension = os.path.splitext(filename)
+    return extension in ('.avi','.mkv','.mp4', '.mpg', '.xvid')
+
+def is_movie_file(filename):
+    if is_media_file(filename) == True:
+        newfile_name, extension = os.path.splitext(filename)
+        match = re.search("\s\(\d+\)", newfile_name)
+        if match is not None:
+            year_string = match.group()
+            if len(newfile_name.replace(year_string, "")) > 1:
+                if newfile_name.endswith(year_string):
+                    return True            
+    return False
     
 def process_filename(filename):  
     episode_obj = None
