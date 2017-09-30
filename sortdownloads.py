@@ -55,11 +55,33 @@ def get_tv_path():
             raise Exception("Definition for <tv> is missing from config.xml")
     else:
         return destination.text
+
+def move_file(source, destination):
+    """ Move file from [source] to [destination] """ 
+    try:
+        if os.path.normpath(source.lower()) != os.path.normpath(destination.lower()): 
+            if not os.path.exists(destination):                                
+                shutil.move(source, destination)
+                print(">> moved '{0}'".format(destination))
+            else: 
+                if filecmp.cmp(source, destination):
+                    os.remove(source)
+                    print("[-] removed '{0}'".format(source))
+                else:
+                    if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
+                        os.remove(source)
+                        print("[-] removed '{0}'".format(source))                            
+    except Exception as ex:
+        print("!! error processing '{0}'.\n{1}".format(source, str(ex)))     
         
 def sort_movies(search_directory, movie_destination):    
-    ''' Move video files that match a given pattern from [search_directory] into [movie_destination].   '''  
+    """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """  
     renamefiles.process_presets(search_directory)
     
+    ## create the movie destination folder if it doesn't exist
+    if not os.path.isdir(movie_destination):
+        os.makedirs(movie_destination)  
+
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
             subdirectory = os.path.join(search_directory, directory)
@@ -71,71 +93,34 @@ def sort_movies(search_directory, movie_destination):
         for filename in filenames:
             filepath = os.path.join(search_directory, filename)
             if os.path.isfile(filepath):
-                if media.is_movie_file(filename):
-                    source = filepath
-                    destination = os.path.join(movie_destination, filename)                       
-                    if os.path.normpath(source.lower()) != os.path.normpath(destination.lower()):   
-                        try:
-                            if not os.path.exists(destination):   
-                                if not os.path.isdir(movie_destination):
-                                    os.makedirs(movie_destination)                                    
-                                shutil.move(source, destination)
-                            else: 
-                                if filecmp.cmp(source, destination):
-                                    os.remove(source)
-                                    print("[-] removed '{0}'".format(source))
-                                else:
-                                    if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
-                                        os.remove(source)
-                                        print("[-] removed '{0}'".format(source))
-                            print(">> moved '{0}'".format(destination))
-                        except Exception as ex:
-                            print("!! error processing '{0}'.\n{1}".format(source, str(ex)))       
+                new_media = media.create_media_file(movie_destination, filename)
+                if new_media is not None and new_media.get_type() == 'MOVIE':                     
+                    move_file(filepath, new_media.get_full_path())       
         
 def sort_tv(search_directory, tvshow_destination, remove_title=False):    
-    ''' Move video files that match a given pattern from [search_directory] into [tvshow_destination].  ''' 
+    """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
             subdirectory = os.path.join(search_directory, directory)
             if os.path.isdir(subdirectory):
-                sort_tv(subdirectory, tvshow_destination)
+                sort_tv(subdirectory, tvshow_destination, remove_title)
                 if not os.listdir(subdirectory):
                     os.rmdir(subdirectory)            
             
         for filename in filenames:
             filepath = os.path.join(search_directory, filename)
-            if os.path.isfile(filepath):                
-                ## If its a video file, attempt to format it as a tv show
-                episode_obj = media.process_filename(filename)  
-                
-                if episode_obj is not None:
-                    source = filepath
-                    new_filename = episode_obj.get_filename(remove_title)
-                    tvshow_path = os.path.join(tvshow_destination, episode_obj.get_name(), "Season " + episode_obj.get_season())
-                    destination = os.path.join(tvshow_path, new_filename)                         
-                    if os.path.normpath(destination.lower()) != os.path.normpath(source.lower()):   
-                        try:
-                            if not os.path.exists(destination):   
-                                if not os.path.isdir(tvshow_path):
-                                    os.makedirs(tvshow_path)                                    
-                                shutil.move(source, destination)
-                            else: 
-                                if filecmp.cmp(source, destination):
-                                    os.remove(source)
-                                    print("[-] removed '{0}'".format(source))
-                                else:
-                                    if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
-                                        os.remove(source)
-                                        print("[-] removed '{0}'".format(source))
-                            print(">> moved '{0}'".format(destination))
-                        except Exception as ex:
-                            print("!! error processing '{0}'.\n{1}".format(source, str(ex)))   
+            if os.path.isfile(filepath):                 
+                new_media = media.create_media_file(tvshow_destination, filename, remove_title)
+                if new_media is not None and new_media.get_type() == 'TV':
+                    if not os.path.isdir(new_media.get_destination()):
+                        os.makedirs(new_media.get_destination())                                   
+                    move_file(filepath, new_media.get_full_path())  
                             
 if __name__ == "__main__":
     try:
         pyapp.print_header("Sort Downloads")   
+
         args = get_arguments()
-        
         if args.tv_only:
             sort_tv(get_root_directory(), get_tv_path(), args.remove_title)
         if args.movies_only:
