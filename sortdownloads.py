@@ -1,7 +1,7 @@
 """
     Sort Downloads
 """
-from pymedia import television as media
+from pymedia import media_utils
 import pyapp, renamefiles
 import argparse
 import os, string, shutil, sys, errno, time, filecmp
@@ -93,8 +93,8 @@ def sort_movies(search_directory, movie_destination):
         for filename in filenames:
             filepath = os.path.join(search_directory, filename)
             if os.path.isfile(filepath):
-                new_media = media.create_media_file(movie_destination, filename)
-                if new_media is not None and new_media.is_type(media.media_type.MOVIE):                     
+                new_media = media_utils.create_media_file(movie_destination, filename)
+                if new_media is not None and new_media.is_tv():                     
                     move_file(filepath, new_media.get_full_path())       
 
 def find_tvshow_path(search_directory, tvshow_name):    
@@ -125,8 +125,8 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
         for filename in filenames:
             filepath = os.path.join(search_directory, filename)
             if os.path.isfile(filepath):                 
-                new_media = media.create_media_file(tvshow_destination, filename, remove_title)
-                if new_media is not None and new_media.is_type(media.media_type.TV):
+                new_media = media_utils.create_media_file(tvshow_destination, filename, remove_title)
+                if new_media.is_tv():
                     destination_path = find_tvshow_path(tvshow_destination, new_media.get_show_name())
                     if destination_path is not None:
                         new_media.destination = destination_path 
