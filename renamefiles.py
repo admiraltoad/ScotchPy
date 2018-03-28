@@ -85,6 +85,13 @@ def get_root_directory():
     """ Return the calling directory. """
     return os.path.abspath(".") + "\\"
 
+def rename_file(source, destination):
+    """ Report and rename [source] file to [destination]. """
+    if not os.path.isfile(destination):
+        print(" << " + source)
+        print(" >> " + destination)                     
+        os.rename(source, destination) 
+
 def rreplace(string, replace_this, with_this, repeat=1):
     """ Reverse replace. Replace starting from the last instance. """
     li = string.rsplit(replace_this, repeat)
@@ -109,28 +116,40 @@ def rename_filename_from_list(filename, replace_list, with_this="", repeat=1, st
     newfile_name = filename
     for replace_this in replace_list:
         if regular_expression:   
-            match = re.search(replace_this, filename)                
+            match = re.search(replace_this, newfile_name)                
             if match is not None:                   
                 replace_this = match.group()
             else:
                 replace_this = None
                 
         if replace_this is not None:
-            ## run find & replace on all valid filenames
-            newfile_name, extension = os.path.splitext(filename)
-            if extension != '':
-                newfile_name = rename_filename(newfile_name, replace_this, with_this, repeat, starts_with, ends_with)
-                newfile_name = newfile_name + extension
-            else:
-                if newfile_name.count(".") == 0:
-                    newfile_name = rename_filename(newfile_name, replace_this, with_this, repeat, starts_with, ends_with)    
+            newfile_name = rename_filename(newfile_name, replace_this, with_this, repeat, starts_with, ends_with)
     return newfile_name
 
-def rename_file(source, destination):
-    """ Report and rename [source] file to [destination]. """
-    print(" << " + source)
-    print(" >> " + source, destination)                     
-    os.rename(source, destination) 
+def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, recursive=False, starts_with=False, ends_with=False, regular_expression=False, media_only=False):
+    """ Rename files in the given search_directory. """ 
+    for root, directories, filenames in os.walk(search_directory):
+        if recursive:
+            for directory in directories:
+                subdirectory = os.path.join(search_directory, directory)
+                if os.path.isdir(subdirectory):
+                    rename_files_in_dir(subdirectory, replace_list, with_this, repeat, recursive, starts_with, ends_with) 
+                
+        for filename in filenames:
+            file_fullpath = os.path.join(search_directory, filename)
+            if os.path.isfile(file_fullpath): 
+                newfile_name, extension = os.path.splitext(filename)
+                if media_only:
+                    if pymedia.is_media_file(filename):
+                        newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
+                else:
+                    newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
+                newfile_name = newfile_name + extension 
+
+                ## if the name has changed, report and rename it
+                if newfile_name != filename:
+                    newfile_fullpath = os.path.join(search_directory, newfile_name)
+                    rename_file(file_fullpath, newfile_fullpath)
     
 def check_preset():
     """ Return True if the first commandline argument is --preset or -p """
@@ -153,9 +172,11 @@ def process_presets(search_directory, recursive=False):
         for filename in filenames:
             file_fullpath = os.path.join(search_directory, filename)
             if os.path.isfile(file_fullpath): 
-                if pymedia.is_media_file(filename):                
+                if pymedia.is_media_file(filename):    
+                    newfile_name, extension = os.path.splitext(filename)
+
                     replace_list = []
-                    filename = rename_filename(filename, ".", " ", 1024)
+                    newfile_name = rename_filename(newfile_name, ".", " ", 1024)
                     
                     ## remove all preset xml enteries from filename                    
                     filepath = os.path.dirname(os.path.realpath(__file__))
@@ -163,47 +184,15 @@ def process_presets(search_directory, recursive=False):
                     root = tree.getroot()                                        
                     for item in root.iter("item"):        
                         replace_list.append(item.text)
-                    replace_list.append("  1")  
+                    replace_list.append("  1")
                     
-                    newfile_name = rename_filename_from_list(filename, replace_list)
-                    
-                    ## wrap movie year with brackets "(1999)"
-                    match = re.search("\s\d+", newfile_name)
-                    if match is not None:    
-                        year = match.group()
-                        if newfile_name.endswith(year):
-                            if int(year) > 1945 and int(year) <= now.year:                            
-                                newfile_name = newfile_name.replace(year, " ({0})".format(year.strip()))
-                    
+                    newfile_name = rename_filename_from_list(newfile_name, replace_list)
+                    newfile_name = newfile_name + extension 
+
                     ## if the name has changed, report and rename it
                     if newfile_name != filename:
                         newfile_fullpath = os.path.join(search_directory, newfile_name)
                         rename_file(file_fullpath, newfile_fullpath)
-    
-def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, recursive=False, starts_with=False, ends_with=False, regular_expression=False, media_only=False):
-    """ Rename files in the given search_directory. """ 
-    for root, directories, filenames in os.walk(search_directory):
-        if recursive:
-            for directory in directories:
-                subdirectory = os.path.join(search_directory, directory)
-                if os.path.isdir(subdirectory):
-                    rename_files_in_dir(subdirectory, replace_list, with_this, repeat, recursive, starts_with, ends_with) 
-                
-        for filename in filenames:
-            file_fullpath = os.path.join(search_directory, filename)
-            if os.path.isfile(file_fullpath): 
-                newfile_name = filename
-                
-                if media_only:
-                    if pymedia.is_media_file(filename):
-                        newfile_name = rename_filename_from_list(filename, replace_list, with_this, repeat, starts_with, ends_with)
-                else:
-                    newfile_name = rename_filename_from_list(filename, replace_list, with_this, repeat, starts_with, ends_with)
-                    
-                ## if the name has changed, report and rename it
-                if newfile_name != filename:
-                    newfile_fullpath = os.path.join(search_directory, newfile_name)
-                    rename_file(file_fullpath, newfile_fullpath)
     
 if __name__ == "__main__":   
     try:

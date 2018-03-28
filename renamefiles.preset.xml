@@ -6,26 +6,36 @@
     <item>WEBRip</item>
     <item>BluRay</item>
     <item>Bluray</item>
+    <item>bluray</item>    
     <item>Xvid</item>
     <item>BRRip</item>
-    <item>HDTV</item>    
+    <item>BrRip</item>
+    <item>HDTV</item>
+    <item>hdtv</item>     
     <item>XviD</item>
     <item>MP3</item>
     <item>DVDRip</item>
     <item>MP3</item>
     <item>HDRip</item>
+    <item>DVDScr</item>
+    <item>HQ</item>
     <item>XViD</item>    
 	<item>unrated</item>
 	<item>Unrated</item>
     <item>X264</item>
     <item>x264</item>
     <item>H264</item>
+    <item>h264</item>
     <item>AAC</item>
     <item>AAC2</item>
     <item>AC3</item>
     <item>DD5</item> 
     <item>DTS</item>
+    <item>WEB</item>  
     <!-- Torrenter Tags  -->
+    <item>[ettv]</item>
+    <item>XVID</item>
+    <item>Hive-CM8</item>
     <item>[eztv]</item>
     <item>-FGT</item>
     <item>0-STUTTERSHIT</item>   
@@ -50,4 +60,22 @@
 	<item>BOKUTOX</item>
     <item>-AMIABLE</item>
 	<item>ShAaNiG</item>	
+    <item>-KILLERS</item>
+    <item>-AVS</item>
+    <item>-MiNDTHEGAP</item>
+    <item>-YesTV</item>
+    <item>-plutonium</item>
+    <item>-crooks</item>
+    <item>-TBS</item>
+    <item>-STRiFE</item>
+    <item>-CONVOY</item>
+    <item>iNTERNAL</item>
+    <item>-BAMBOOZLE</item>
+    <item>-geckos</item>
+    <item>-GECKOS</item>
+    <item>-SHITBOX</item>
+    <item>bitloks</item>
+    <item>-REFiNED</item>
+    <item>-sparks</item>
+    <item>-lol</item>
 </root>

@@ -3,25 +3,68 @@
     
 """
 import re, os, datetime
+from enum import Enum
 from xml.etree import ElementTree as etree
 
+class media_type(Enum):
+    MISC = 1
+    TV = 2
+    MOVIE = 3
+
 class media_file():       
-    def __init__(self, type, destination, filename):
+    def __init__(self, type, destination, filename, subdirectories = None):
         if filename is None or filename == "":
             raise Exception("Invalid media file filename. [{0}]".format(filename))
-        if type not in ("TV", "MOVIE"):
-            raise Exception("Invalid media file type. [{1}]".format(type))  
-        self.type = type              
+        if type not in media_type:
+            raise Exception("Invalid media file type. [{1}]".format(str(type)))
+        self.type = type           
         self.destination = destination
         self.filename = filename  
+        self.subdirectories = subdirectories
+    def is_type(self, type):
+        return type == self.type
     def get_type(self):
         return self.type
     def get_filename(self):
         return self.filename
     def get_destination(self):
         return self.destination
+    def get_subdirectories(self):
+        return self.subdirectories
+    def get_full_destination(self):
+        return os.path.join(self.destination, self.subdirectories)
     def get_full_path(self):
-        return os.path.join(self.destination, self.filename)
+        return os.path.join(self.get_full_destination(), self.filename)
+
+class tv_media(media_file):
+    def __init__(self, show_name, season, episode, title, extension, destination):
+        filename = ""
+        if title == "" or title is None:
+            filename = "{0} s{1}e{2}{3}".format(show_name, season, episode, extension) 
+        else:
+            filename = "{0} s{1}e{2} {3}{4}".format(show_name, season, episode, title, extension)
+        subdirectory = "Season {0}".format(season)
+        super(tv_media, self).__init__(media_type.TV, destination, filename, subdirectory)
+        self.show_name = show_name
+        self.season = season
+        self.episode = episode     
+    def get_show_name(self):
+        return self.show_name
+    def get_season(self):
+        return self.season
+    def get_episode(self):
+        return self.episode
+
+class movie_media(media_file):
+    def __init__(self, movie_name, year, extension, destination, subdirectory = None):
+        filename = "{0} ({1}).{2}".format(movie_name, year, extension)
+        super(movie_media, self).__init__(media_type.MOVIE, destination, filename, subdirectory)
+        self.movie_name = movie_name
+        self.year = year   
+    def get_movie_name(self):
+        return self.movie_name
+    def get_year(self):
+        return self.year
 
 def find_season_episode_tag(filename): 
     found = re.search("\ss\d+\se\d+", filename) 
@@ -72,7 +115,18 @@ def process_tvshow_name(tvshow_name):
 
 def is_media_file(filename):
     newfile_name, extension = os.path.splitext(filename)
-    return extension in ('.avi','.mkv','.mp4', '.mpg', '.xvid')
+    return extension in ('.avi','.mkv','.mp4', '.mpg', '.xvid', '.mov')
+
+def get_filename_year(filename):
+    filename_year = None
+    match = re.search("\s\d+", filename)
+    if match is not None:    
+        now = datetime.datetime.now()
+        year = match.group()
+        if filename.endswith(year):
+            if int(year) > 1945 and int(year) <= now.year:                            
+                filename_year = year.strip()
+    return filename_year
 
 def format_filename_year(filename):
     new_filename = filename
@@ -106,13 +160,13 @@ def create_media_file(destination, filename, remove_title=False):
                 newfile_name = "{0} s{1}e{2}{3}".format(name, season, episode, extension) 
             else:
                 newfile_name = "{0} s{1}e{2} {3}{4}".format(name, season, episode, title, extension)
-            newfile_destination = os.path.join(destination, name, "Season {0}".format(season))
-            new_media_file = media_file('TV', newfile_destination, newfile_name)
+            
+            tvshow_path = os.path.join(name, "Season {0}".format(season))
+            new_media_file = tv_media(name, season, episode, title, extension, destination)
         else:        
-            newfile_name = newfile_name.replace(".", " ")
-            newfile_name = format_filename_year(newfile_name)
-            print("{0}{1}".format(newfile_name, extension))
+            movie_name = newfile_name.replace(".", " ")
+            movie_year = get_filename_year(newfile_name)
             if newfile_name != filename:
-                new_media_file = media_file('MOVIE', destination, "{0}{1}".format(newfile_name, extension))
+                new_media_file = movie_media(movie_name, movie_year, extension, destination)
     return new_media_file    
         
