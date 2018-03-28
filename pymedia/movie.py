@@ -6,9 +6,9 @@ from pymedia import media as m
 
 class movie_media(m.media_file):
     
-    def __init__(self, movie_name, year, extension, destination, subdirectory = None):
-        filename = "{0} ({1}).{2}".format(movie_name, year, extension)
-        super(movie_media, self).__init__(m.media_type.MOVIE, destination, filename, subdirectory)
+    def __init__(self, movie_name, year, extension, destination, subdirectory = ""):
+        filename = "{0} ({1}){2}".format(movie_name, year, extension)
+        super(movie_media, self).__init__(destination, filename, m.media_type.MOVIE, subdirectory)
         self.movie_name = movie_name
         self.year = year
 

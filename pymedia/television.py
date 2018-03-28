@@ -15,7 +15,7 @@ class tv_media(m.media_file):
         else:
             filename = "{0} s{1}e{2} {3}{4}".format(show_name, season, episode, title, extension)
         subdirectory = "Season {0}".format(season)
-        super(tv_media, self).__init__(m.media_type.TV, destination, filename, subdirectory)
+        super(tv_media, self).__init__(destination, filename, m.media_type.TV, subdirectory)
         self.show_name = show_name
         self.season = season
         self.episode = episode 
@@ -25,7 +25,7 @@ class tv_media(m.media_file):
 
     def get_season(self):
         return self.season
-        
+
     def get_episode(self):
         return self.episode
 

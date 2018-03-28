@@ -94,8 +94,8 @@ def sort_movies(search_directory, movie_destination):
             filepath = os.path.join(search_directory, filename)
             if os.path.isfile(filepath):
                 new_media = media_utils.create_media_file(movie_destination, filename)
-                if new_media is not None and new_media.is_tv():                     
-                    move_file(filepath, new_media.get_full_path())       
+                if new_media.is_movie():                     
+                    move_file(filepath, new_media.get_full_path())                       
 
 def find_tvshow_path(search_directory, tvshow_name):    
     """ Find [tvshow_name] folder name in [search_directory].  """  

@@ -15,7 +15,7 @@ def get_filename_year(filename):
     """ Return the year given in the filename """
     new_filename = filename
     filename_year = None
-    match = re.search("\(\s\d+\)", new_filename)
+    match = re.search("\s\(\d+\)", new_filename)
     if match is None:
         match = re.search("\s\d+", new_filename)
     if match is not None:    
@@ -42,7 +42,7 @@ def format_filename_year(filename):
     return new_filename
 
 def create_media_file(destination, filename, remove_title=False):  
-    new_media_file = m.media_file(m.media_type.MISC, destination, filename)    
+    new_media_file = m.media_file(destination, filename)    
     if is_media_file(filename):    
         newfile_name, extension = os.path.splitext(filename)
         newfile_name = newfile_name.replace("."," ")
@@ -60,7 +60,9 @@ def create_media_file(destination, filename, remove_title=False):
             season, episode = tv.get_season_episode_numbers(tag)            
             new_media_file = tv.tv_media(name, season, episode, title, extension, destination)
         else:       
-            name, year, = get_filename_year(newfile_name)
-            if newfile_name != filename:
+            name, year = get_filename_year(newfile_name)
+            if year is not None:
                 new_media_file = movie.movie_media(name, year, extension, destination)
+    if new_media_file.get_type() == m.media_type.MISC:
+        print("?? unable to determine media type for [{0}]".format(filename))
     return new_media_file

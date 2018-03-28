@@ -1,7 +1,7 @@
 """
     Rename Files
 """
-from pymedia import television as pymedia
+from pymedia import media_utils
 import pyapp
 import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree
@@ -140,7 +140,7 @@ def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, 
             if os.path.isfile(file_fullpath): 
                 newfile_name, extension = os.path.splitext(filename)
                 if media_only:
-                    if pymedia.is_media_file(filename):
+                    if media_utils.is_media_file(filename):
                         newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
                 else:
                     newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
@@ -172,7 +172,7 @@ def process_presets(search_directory, recursive=False):
         for filename in filenames:
             file_fullpath = os.path.join(search_directory, filename)
             if os.path.isfile(file_fullpath): 
-                if pymedia.is_media_file(filename):    
+                if media_utils.is_media_file(filename):    
                     newfile_name, extension = os.path.splitext(filename)
 
                     replace_list = []
