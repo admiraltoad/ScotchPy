@@ -13,7 +13,7 @@ class media_type(Enum):
 
 class media_file():
     """  """
-    def __init__(self, destination, filename, type = media_type.MISC, subdirectories = ""):
+    def __init__(self, destination, filename, type = media_type.MISC, subdirectories = []):
         if filename is None or filename == "":
             raise Exception("Invalid media file filename. [{0}]".format(filename))
         if type not in media_type:
@@ -21,7 +21,7 @@ class media_file():
         self.type = type           
         self.destination = destination
         self.filename = filename  
-        self.subdirectories = "" if subdirectories is None else subdirectories
+        self.subdirectories = [] if subdirectories is None else subdirectories
 
     def is_tv(self):
         return self.type == media_type.TV
@@ -42,7 +42,7 @@ class media_file():
         return self.subdirectories
 
     def get_full_destination(self):
-        return os.path.join(self.destination, self.subdirectories)
+        return os.path.join(self.destination, *self.subdirectories)
 
     def get_full_path(self):
         return os.path.join(self.get_full_destination(), self.filename)

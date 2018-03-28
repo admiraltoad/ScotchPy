@@ -75,9 +75,7 @@ def move_file(source, destination):
         print("!! error processing '{0}'.\n{1}".format(source, str(ex)))     
         
 def sort_movies(search_directory, movie_destination):    
-    """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """  
-    renamefiles.process_presets(search_directory)
-    
+    """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """     
     ## create the movie destination folder if it doesn't exist
     if not os.path.isdir(movie_destination):
         os.makedirs(movie_destination)  
@@ -110,6 +108,8 @@ def find_tvshow_path(search_directory, tvshow_name):
                 if tvshow_path is None:
                     if directory.lower() == tvshow_name.lower():                        
                         tvshow_path = subdirectory
+    if tvshow_path is not None:
+        tvshow_path = os.path.abspath(os.path.join(tvshow_path, os.pardir))
     return tvshow_path
         
 def sort_tv(search_directory, tvshow_destination, remove_title=False):    
@@ -131,7 +131,12 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
                     if destination_path is not None:
                         new_media.destination = destination_path 
                     if not os.path.isdir(new_media.get_destination()):
-                        os.makedirs(new_media.get_destination()) 
+                        os.makedirs(new_media.get_destination())
+                    current_path = new_media.get_destination()
+                    for subdir in new_media.get_subdirectories():
+                        current_path = os.path.join(current_path, subdir)
+                        if not os.path.exists(current_path):
+                            os.makedirs(current_path)
                     move_file(filepath, new_media.get_full_path())  
                             
 if __name__ == "__main__":
