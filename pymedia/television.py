@@ -29,7 +29,8 @@ class tv_media(m.media_file):
     def get_episode(self):
         return self.episode
 
-def find_season_episode_tag(filename): 
+def find_episode_pattern(filename):
+    """ Find tv episode pattern (season #, episode #) in [filename]. """ 
     found = re.search("\ss\d+\se\d+", filename) 
     if not found:
         found = re.search("\ss\d+e\d+", filename)       
@@ -45,19 +46,33 @@ def find_season_episode_tag(filename):
         found = re.search("\ss\d+\sE\d+", filename)
     if not found:
         found = re.search("\ss\d+E\d+", filename)
+    if found is not None:
+        found = found.group(0).strip() 
     return found
 
-def get_season_episode_numbers(season_episode_tag):
-    pattern = season_episode_tag
-    pattern = pattern.lower()
-    pattern = pattern.replace("s"," ")
-    pattern = pattern.replace("e"," ")
-    patternArray = pattern.split()
-    season_num = int(patternArray[0])
-    episode_num =  int(patternArray[1])
-    season_num = "{:0>2}".format(season_num)
-    episode_num = "{:0>2}".format(episode_num)
-    return season_num, episode_num
+def get_episode_info(filename):
+    """ Find tv episode info (season #, episode #) in [filename]. """ 
+    episode_tag, season, episode = None, None, None
+    episode_tag = find_episode_pattern(filename)
+    if episode_tag is not None:
+        pattern = episode_tag.lower().replace("s"," ").replace("e"," ")
+        pattern_array = pattern.split()
+        season = int(pattern_array[0])
+        episode =  int(pattern_array[1])
+        season = "{:0>2}".format(season)
+        episode = "{:0>2}".format(episode)
+    return episode_tag, season, episode
+
+def find_tvshow_path(search_directory, tvshow_name):    
+    """ Find [tvshow_name] folder name in [search_directory].  """  
+    tvshow_path = None
+    for root, directories, files in os.walk(search_directory): 
+        for directory in directories:              
+            subdirectory = os.path.join(root, directory)
+            if os.path.isdir(subdirectory):
+                if directory.lower() == tvshow_name.lower():
+                    return os.path.abspath(os.path.join(subdirectory, os.pardir))
+    return tvshow_path
 
 def get_tvshow_items():
     filepath = os.path.dirname(os.path.realpath(__file__))

@@ -94,49 +94,27 @@ def sort_movies(search_directory, movie_destination):
                 new_media = media_utils.create_media_file(movie_destination, filename)
                 if new_media.is_movie():                     
                     move_file(filepath, new_media.get_full_path())                       
-
-def find_tvshow_path(search_directory, tvshow_name):    
-    """ Find [tvshow_name] folder name in [search_directory].  """  
-    tvshow_path = None
-    for root, directories, filenames in os.walk(search_directory):
-        for directory in directories:
-            if tvshow_path is not None:
-                break                
-            subdirectory = os.path.join(search_directory, directory)
-            if os.path.isdir(subdirectory):
-                tvshow_path = find_tvshow_path(subdirectory, tvshow_name)
-                if tvshow_path is None:
-                    if directory.lower() == tvshow_name.lower():                        
-                        tvshow_path = subdirectory
-    if tvshow_path is not None:
-        tvshow_path = os.path.abspath(os.path.join(tvshow_path, os.pardir))
-    return tvshow_path
         
 def sort_tv(search_directory, tvshow_destination, remove_title=False):    
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
-            subdirectory = os.path.join(search_directory, directory)
-            if os.path.isdir(subdirectory):
-                sort_tv(subdirectory, tvshow_destination, remove_title)
-                if not os.listdir(subdirectory):
-                    os.rmdir(subdirectory)          
+            subdirectory = os.path.join(root, directory)
+            if os.path.isdir(subdirectory) and not os.listdir(subdirectory):
+                os.rmdir(subdirectory)          
          
         for filename in filenames:
-            filepath = os.path.join(search_directory, filename)
+            filepath = os.path.join(root, filename)
             if os.path.isfile(filepath):                 
                 new_media = media_utils.create_media_file(tvshow_destination, filename, remove_title)
                 if new_media.is_tv():
-                    destination_path = find_tvshow_path(tvshow_destination, new_media.get_show_name())
-                    if destination_path is not None:
-                        new_media.destination = destination_path 
                     if not os.path.isdir(new_media.get_destination()):
                         os.makedirs(new_media.get_destination())
                     current_path = new_media.get_destination()
                     for subdir in new_media.get_subdirectories():
                         current_path = os.path.join(current_path, subdir)
                         if not os.path.exists(current_path):
-                            os.makedirs(current_path)
+                            os.makedirs(current_path)                    
                     move_file(filepath, new_media.get_full_path())  
                             
 if __name__ == "__main__":
