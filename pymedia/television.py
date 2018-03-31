@@ -74,6 +74,33 @@ def find_tvshow_path(search_directory, tvshow_name):
                     return os.path.abspath(os.path.join(subdirectory, os.pardir))
     return tvshow_path
 
+def is_tv_media(filename):
+    if find_episode_pattern(filename) is None:
+        return False
+    return True
+
+def process_filename(filename, extension, destination, remove_title = False):
+    tv_file = None
+    if find_episode_pattern(filename) is not None:
+        episode_tag, season, episode = get_episode_info(filename)
+        if episode_tag is None:
+            raise Exception("Failed to process filename as tv show pattern.")
+        tag_start = int(filename.find(episode_tag))
+        tag_end = int(tag_start + len(episode_tag))             
+        showname = (filename[:tag_start]).strip()  
+        showname = process_tvshow_name(showname)      
+        showname, tvshow_year = m.get_filename_year(showname)
+        if tvshow_year is not None:
+            showname = "{0} ({1})".format(showname, tvshow_year)
+        episode_title = (filename[tag_end:(len(filename))]).strip()             
+        if remove_title == True or len(episode_title) < 1:
+            episode_title = None
+        tvshow_destination = find_tvshow_path(destination, showname)
+        if tvshow_destination is None:
+            tvshow_destination = destination
+        tv_file = tv_media(showname, season, episode, episode_title, extension, tvshow_destination)
+    return tv_file
+
 def get_tvshow_items():
     filepath = os.path.dirname(os.path.realpath(__file__))
     tree = etree.parse(os.path.join(filepath,"tvshow.match.xml"))

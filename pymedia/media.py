@@ -2,16 +2,25 @@
     pymedia :: media file
     
 """
-import os
+import os, re, datetime
 from enum import Enum
 
 class media_type(Enum):
     """  """
+    INVALID = 0
     MISC = 1
     TV = 2
     MOVIE = 3
 
-class media_file():
+class base_file():
+    """  """
+    def __init__(self):
+        self.type = media_type.INVALID
+
+    def get_type(self):
+        return self.type
+
+class media_file(base_file):
     """  """
     def __init__(self, destination, filename, type = media_type.MISC, subdirectories = []):
         if filename is None or filename == "":
@@ -28,9 +37,6 @@ class media_file():
 
     def is_movie(self):
         return self.type == media_type.MOVIE
-
-    def get_type(self):
-        return self.type
 
     def get_filename(self):
         return self.filename
@@ -50,3 +56,20 @@ class media_file():
 def is_media_file(filename):
     newfile_name, extension = os.path.splitext(filename)
     return extension in ('.avi','.mkv','.mp4', '.mpg', '.xvid', '.mov')
+
+def get_filename_year(filename):
+    """ Search for a year at the end of the filename. Return them seperately. """
+    new_filename = filename
+    filename_year = None
+    match = re.search("\s\(\d+\)", new_filename)
+    if match is None:
+        match = re.search("\s\d+", new_filename)
+    if match is not None:    
+        now = datetime.datetime.now()
+        year_string = match.group()
+        year = int(year_string.replace("(", "").replace(")", ""))
+        if new_filename.endswith(year_string):
+            if year > 1945 and year <= now.year:                        
+                filename_year = str(year)
+                new_filename = filename.replace(year_string, "")
+    return new_filename, filename_year

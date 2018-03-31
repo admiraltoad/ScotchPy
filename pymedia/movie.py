@@ -17,3 +17,14 @@ class movie_media(m.media_file):
 
     def get_year(self):
         return self.year
+
+def is_movie_media(filename):
+    movie_name, movie_year = m.get_filename_year(filename)
+    if movie_year is None:
+        return False
+    return True
+
+def process_filename(filename, extension, destination):
+    movie_name, movie_year = m.get_filename_year(filename)
+    if movie_year is not None:
+        new_media_file = movie_media(movie_name, movie_year, extension, destination)
