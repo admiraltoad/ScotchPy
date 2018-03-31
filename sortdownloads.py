@@ -73,23 +73,24 @@ def move_file(source, destination):
                         print("[-] removed '{0}'".format(source))                            
     except Exception as ex:
         print("!! error processing '{0}'.\n{1}".format(source, str(ex)))     
-        
+
+def remove_if_empty(root, directory):
+    """ Remove [directory] if the folder is empty. """
+    subdirectory = os.path.join(root, directory)
+    if os.path.isdir(subdirectory) and not os.listdir(subdirectory):
+        os.rmdir(subdirectory)  
+
 def sort_movies(search_directory, movie_destination):    
     """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """     
-    ## create the movie destination folder if it doesn't exist
     if not os.path.isdir(movie_destination):
         os.makedirs(movie_destination)  
 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
-            subdirectory = os.path.join(search_directory, directory)
-            if os.path.isdir(subdirectory):
-                sort_movies(subdirectory, movie_destination)
-                if not os.listdir(subdirectory):
-                    os.rmdir(subdirectory)            
-            
+            remove_if_empty(root, directory)  
+
         for filename in filenames:
-            filepath = os.path.join(search_directory, filename)
+            filepath = os.path.join(root, filename)
             if os.path.isfile(filepath):
                 new_media = media_utils.create_media_file(movie_destination, filename)
                 if new_media.is_movie():                     
@@ -99,9 +100,7 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
-            subdirectory = os.path.join(root, directory)
-            if os.path.isdir(subdirectory) and not os.listdir(subdirectory):
-                os.rmdir(subdirectory)          
+            remove_if_empty(root, directory)       
          
         for filename in filenames:
             filepath = os.path.join(root, filename)

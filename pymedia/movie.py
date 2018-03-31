@@ -2,13 +2,13 @@
     pymedia :: movie
     
 """
-from pymedia import media as m
+from pymedia import media
 
-class movie_media(m.media_file):
+class movie_media(media.media_file):
     
     def __init__(self, movie_name, year, extension, destination):
         filename = "{0} ({1}){2}".format(movie_name, year, extension)
-        super(movie_media, self).__init__(destination, filename, m.media_type.MOVIE)
+        super(movie_media, self).__init__(destination, filename, media.media_type.MOVIE)
         self.movie_name = movie_name
         self.year = year
 
@@ -17,14 +17,3 @@ class movie_media(m.media_file):
 
     def get_year(self):
         return self.year
-
-def is_movie_media(filename):
-    movie_name, movie_year = m.get_filename_year(filename)
-    if movie_year is None:
-        return False
-    return True
-
-def process_filename(filename, extension, destination):
-    movie_name, movie_year = m.get_filename_year(filename)
-    if movie_year is not None:
-        new_media_file = movie_media(movie_name, movie_year, extension, destination)
