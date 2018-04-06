@@ -1,5 +1,5 @@
 """
-    pyapp	
+    Application	
 	
 """
 import os, string, shutil, sys, errno 
