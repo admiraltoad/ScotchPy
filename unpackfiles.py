@@ -1,7 +1,8 @@
 """
     Unpack Files
 """
-import pyapp, os, sys, shutil, errno
+import application as app
+import os, sys, shutil, errno
 
 m_rootDir = os.path.abspath('.') + '\\'
 
@@ -26,6 +27,6 @@ def main(searchDir):
 					print("! Error processing [" + currentDir + "]")
 
 if __name__ == "__main__":   					
-    pyapp.print_header("Unpack Files")
+    app.print_header("Unpack Files")
     main(m_rootDir)
     sys.exit(0)

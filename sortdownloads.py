@@ -2,7 +2,8 @@
     Sort Downloads
 """
 from pymedia import media_utils
-import pyapp, renamefiles
+import application as app
+import renamefiles
 import argparse
 import os, string, shutil, sys, errno, time, filecmp
    
@@ -32,7 +33,7 @@ def get_arguments():
         )                
     parser.set_defaults(movies_only=False,tv_only=False,remove_title=False)
  
-    return parser.parse_args(args=pyapp.get_system_arguments())
+    return parser.parse_args(args=app.get_system_arguments())
 
 def get_root_directory():
     """ Return the calling directory. """
@@ -40,7 +41,7 @@ def get_root_directory():
     
 def get_movie_path():
     """ Get the movies directory from the configuration file. """
-    destination = pyapp.get_config_value('movies')
+    destination = app.get_config_value('movies')
     if destination is None:
         raise Exception("Definition for <movies> is missing from config.xml")
     else:
@@ -48,9 +49,9 @@ def get_movie_path():
         
 def get_tv_path():
     """ Get the tv show directory from the configuration file. """
-    destination = pyapp.get_config_value('tv')
+    destination = app.get_config_value('tv')
     if destination is None:
-        destination = pyapp.get_config_value('sortdownloads')
+        destination = app.get_config_value('sortdownloads')
         if destination is None:
             raise Exception("Definition for <tv> is missing from config.xml")
     else:
@@ -68,7 +69,7 @@ def move_file(source, destination):
                     os.remove(source)
                     print("[-] removed '{0}'".format(source))
                 else:
-                    if pyapp.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
+                    if app.query_yes_no("'{0}' already exists at target location '{1}' \n Do you want to delete this file??".format(source, destination)):
                         os.remove(source)
                         print("[-] removed '{0}'".format(source))                            
     except Exception as ex:
@@ -118,7 +119,7 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
                             
 if __name__ == "__main__":
     try:
-        pyapp.print_header("Sort Downloads")   
+        app.print_header("Sort Downloads")   
 
         args = get_arguments()
         run_all = not args.tv_only and not args.movies_only

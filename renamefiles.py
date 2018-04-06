@@ -2,14 +2,14 @@
     Rename Files
 """
 from pymedia import media_utils
-import pyapp
+import application as app
 import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree
 import argparse
   
 def get_arguments():  
     """ Define and return a list of command line arguments. """
-    arguments = pyapp.get_system_arguments()
+    arguments = app.get_system_arguments()
     if arguments is None:              
         return False, arguments
     elif len(arguments) == 2 and not str(arguments[0]).startswith("-") and not str(arguments[1]).startswith("-"):
@@ -205,7 +205,7 @@ def process_presets(search_directory, recursive=False):
 
 def check_preset():
     """ Return True if the first commandline argument is --preset or -p """
-    system_arguments = pyapp.get_system_arguments()  
+    system_arguments = app.get_system_arguments()  
     if len(system_arguments) > 0:
         if system_arguments[0] == "--preset" or system_arguments[0] == "-p":
             return True
@@ -213,7 +213,7 @@ def check_preset():
 
 if __name__ == "__main__":   
     try:
-        pyapp.print_header("Rename Files")
+        app.print_header("Rename Files")
         
         check, args = get_arguments()
         if check == False:
@@ -222,7 +222,7 @@ if __name__ == "__main__":
             process_presets(get_root_directory(), args.recursive)
         else:
             print("repeat={0}, recursive={1}, starts_wth={2}, ends_with={3}, regex={4}".format(args.repeat, args.recursive, args.starts_with, args.ends_with, args.regular_expression))
-            if pyapp.query_yes_no("Replace '{0}' with '{1}'?".format(args.replace_this, args.with_this)):
+            if app.query_yes_no("Replace '{0}' with '{1}'?".format(args.replace_this, args.with_this)):
                 replace_list = [args.replace_this]               
                 rename_files_in_dir(get_root_directory(), replace_list, args.with_this, args.repeat, args.recursive, args.starts_with, args.ends_with, args.regular_expression)            
                 
