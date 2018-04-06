@@ -17,6 +17,8 @@ def print_header(name):
 def get_system_arguments():
     sys_argv = list(sys.argv)
     sys_argv.pop(0) ## remove filepath from the system arguments
+    if len(sys_argv) == 0:
+        sys_argv = None
     return sys_argv
 
 def get_config_value(key_name):    

@@ -7,8 +7,17 @@ import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree
 import argparse
   
-def get_arguments():    
+def get_arguments():  
     """ Define and return a list of command line arguments. """
+    arguments = pyapp.get_system_arguments()
+    if arguments is None:              
+        return False, arguments
+    elif len(arguments) == 2 and not str(arguments[0]).startswith("-") and not str(arguments[1]).startswith("-"):
+        return False, arguments
+    elif len(arguments) == 1 and not str(arguments[0]).startswith("-"):
+        return False, arguments
+
+    ## define command arguments
     parser = argparse.ArgumentParser(description="Rename Files") 
     parser.add_argument(
         "--replace_this", 
@@ -67,20 +76,20 @@ def get_arguments():
     parser.set_defaults(replace_this=None, with_this="", regular_expression=False, repeat=0, recursive=False, starts_with=False, ends_with=False, preset=False)
 
     ## Process system arguments    
-    command_arguments = parser.parse_args(args=pyapp.get_system_arguments())
+    command_arguments = parser.parse_args(args=arguments)
     
     ## Error Handling
     if command_arguments.preset == False and command_arguments.replace_this is None:
         raise Exception("Argument [--replace_this] is required.")
     if command_arguments.repeat < 0:
-         raise Exception("Arguemnt [--repeat] must be a positive integer.")   
+        raise Exception("Arguemnt [--repeat] must be a positive integer.")   
     
     ## Defaults argument values
     if command_arguments.repeat == 0:
         command_arguments.repeat = 1
     
-    return command_arguments
-
+    return True, command_arguments
+        
 def get_root_directory():
     """ Return the calling directory. """
     return os.path.abspath(".") + "\\"
@@ -150,15 +159,15 @@ def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, 
                 if newfile_name != filename:
                     newfile_fullpath = os.path.join(search_directory, newfile_name)
                     rename_file(file_fullpath, newfile_fullpath)
-    
-def check_preset():
-    """ Return True if the first commandline argument is --preset or -p """
-    system_arguments = pyapp.get_system_arguments()  
-    if len(system_arguments) > 0:
-        if system_arguments[0] == "--preset" or system_arguments[0] == "-p":
-            return True
-    return False
-    
+
+def process_no_arguments(search_directory, arguments):
+    """ Process filenames when no arguments (--item/-i) are given. """
+    if arguments is not None:
+        if len(arguments) == 2:
+            rename_files_in_dir(search_directory,[str(arguments[0])],str(arguments[1]))
+        elif len(arguments) == 1:
+            rename_files_in_dir(search_directory,[str(arguments[0])])
+
 def process_presets(search_directory, recursive=False):
     """ Process filenames using the given list of preset rules. """ 
     now = datetime.datetime.now()
@@ -193,14 +202,24 @@ def process_presets(search_directory, recursive=False):
                     if newfile_name != filename:
                         newfile_fullpath = os.path.join(search_directory, newfile_name)
                         rename_file(file_fullpath, newfile_fullpath)
-    
+
+def check_preset():
+    """ Return True if the first commandline argument is --preset or -p """
+    system_arguments = pyapp.get_system_arguments()  
+    if len(system_arguments) > 0:
+        if system_arguments[0] == "--preset" or system_arguments[0] == "-p":
+            return True
+    return False
+
 if __name__ == "__main__":   
     try:
         pyapp.print_header("Rename Files")
         
-        args = get_arguments()
-        if check_preset():
-            process_presets(get_root_directory(), args.recursive);
+        check, args = get_arguments()
+        if check == False:
+            process_no_arguments(get_root_directory(), args)
+        elif check_preset():
+            process_presets(get_root_directory(), args.recursive)
         else:
             print("repeat={0}, recursive={1}, starts_wth={2}, ends_with={3}, regex={4}".format(args.repeat, args.recursive, args.starts_with, args.ends_with, args.regular_expression))
             if pyapp.query_yes_no("Replace '{0}' with '{1}'?".format(args.replace_this, args.with_this)):
