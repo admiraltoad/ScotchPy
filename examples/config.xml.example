@@ -1,3 +1,5 @@
 <root>
-<sortdownloads>D:\_TVShows</sortdownloads>
+<tv>D:\Videos\TVShows</tv>
+<movies>D:\Videos\Movies</movies>
+<sortdownloads>D:\Videos</sortdownloads>
 </root>
