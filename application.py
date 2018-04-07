@@ -19,17 +19,7 @@ def get_system_arguments():
     sys_argv.pop(0) ## remove filepath from the system arguments
     if len(sys_argv) == 0:
         sys_argv = None
-    return sys_argv
-
-def get_config_value(key_name):    
-    """ get the key_name node from the config.xml file """
-    filepath = os.path.dirname(os.path.realpath(__file__))
-    config_file = os.path.join(filepath,'config.xml')
-    if not os.path.isfile(config_file):
-        raise Exception("Missing expected [config.xml].")
-        
-    root = etree.parse(config_file).getroot()
-    return root.find(key_name)       
+    return sys_argv  
     
 def query_yes_no(question, default=None):
     """Ask a yes/no question via input() and return their answer.

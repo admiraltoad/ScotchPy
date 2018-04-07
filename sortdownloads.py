@@ -2,8 +2,8 @@
     Sort Downloads
 """
 from pymedia import media_utils
+import config, renamefiles
 import application as app
-import renamefiles
 import argparse
 import os, string, shutil, sys, errno, time, filecmp
    
@@ -41,7 +41,7 @@ def get_root_directory():
     
 def get_movie_path():
     """ Get the movies directory from the configuration file. """
-    destination = app.get_config_value('movies')
+    destination = config.get_value('movies')
     if destination is None:
         raise Exception("Definition for <movies> is missing from config.xml")
     else:
@@ -49,9 +49,9 @@ def get_movie_path():
         
 def get_tv_path():
     """ Get the tv show directory from the configuration file. """
-    destination = app.get_config_value('tv')
+    destination = config.get_value('tv')
     if destination is None:
-        destination = app.get_config_value('sortdownloads')
+        destination = config.get_value('sortdownloads')
         if destination is None:
             raise Exception("Definition for <tv> is missing from config.xml")
     else:
