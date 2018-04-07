@@ -1,5 +1,5 @@
 """
-    pymedia :: television
+    Television
     
 """
 from pymedia import media

@@ -1,7 +1,7 @@
 """
     Rename Files
 """
-from pymedia import media_utils
+from media import media_utils
 import application as app
 import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree

@@ -1,7 +1,7 @@
 """
     Sort Downloads
 """
-from pymedia import media_utils
+from media import media_utils
 import config, renamefiles
 import application as app
 import argparse

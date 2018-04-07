@@ -1,13 +1,13 @@
 """
-    pymedia :: media utilities
+    Media Utilities
     
 """
 import os, re, datetime
 import xml.etree.ElementTree as etree
 
-from pymedia import television as tv
-from pymedia import movie
-from pymedia import media
+from media import television as tv
+from media import movie
+from media import media
 
 def is_media_file(filename):
     """ Check the file extension to see if it is a media file. """
