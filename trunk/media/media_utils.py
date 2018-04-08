@@ -5,9 +5,9 @@
 import os, re, datetime
 import xml.etree.ElementTree as etree
 
-from media import television as tv
-from media import movie
-from media import media
+from media import tv_media
+from media import movie_media
+from media import media_file
 
 def is_media_file(filename):
     """ Check the file extension to see if it is a media file. """
@@ -102,14 +102,13 @@ def get_tvshow_items():
 def process_tvshow_name(tvshow_name):
     """ Process [tvshow_name] through the xml match list. """
     tvshow_match = None
-    for item in get_tvshow_items():       
+    for item in get_tvshow_items():
+        if tvshow_match is not None:
+            break      
         name = item.find("name").text
         if name.lower() == tvshow_name.lower():
-            tvshow_match = item.find("match").text
-            break
-    if tvshow_match is not None:
-        tvshow_name = tvshow_match        
-    return tvshow_name
+            tvshow_match = item.find("match").text                  
+    return tvshow_name if tvshow_match is None else tvshow_match
 
 ######################## Object Creation ########################
 
@@ -118,7 +117,7 @@ def create_movie_media(filename, extension, destination):
     movie_file = None
     movie_name, movie_year = get_filename_year(filename)
     if movie_year is not None:
-        movie_file = movie.movie_media(movie_name, movie_year, extension, destination)
+        movie_file = movie_media.movie_media(movie_name, movie_year, extension, destination)
     return movie_file
 
 def create_tv_media(filename, extension, destination, remove_title = False):
@@ -141,12 +140,12 @@ def create_tv_media(filename, extension, destination, remove_title = False):
         tvshow_destination = find_tvshow_path(destination, showname)
         if tvshow_destination is None:
             tvshow_destination = destination
-        tv_file = tv.tv_media(showname, season, episode, episode_title, extension, tvshow_destination)
+        tv_file = tv_media.tv_media(showname, season, episode, episode_title, extension, tvshow_destination)
     return tv_file
 
 def create_media_file(destination, filename, remove_title=False):
     """ Process [filename] to determine if it is a tv or movie media file.  """ 
-    new_media_file = media.base_file()
+    new_media_file = media_file.base_file()
     if is_media_file(filename):   
         newfile_name, extension = os.path.splitext(filename)
         newfile_name = newfile_name.replace("."," ")        
@@ -155,5 +154,5 @@ def create_media_file(destination, filename, remove_title=False):
         elif is_movie_media(newfile_name):
             new_media_file = create_movie_media(newfile_name, extension, destination)
         else:
-            new_media_file = media.media_file(destination, filename)
+            new_media_file = media_file.media_file(destination, filename)
     return new_media_file   

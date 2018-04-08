@@ -2,9 +2,9 @@
     Television
     
 """
-from pymedia import media
+from media import media_file
 
-class tv_media(media.media_file):
+class tv_media(media_file.media_file):
 
     def __init__(self, show_name, season, episode, title, extension, destination):
         filename = ""
@@ -13,7 +13,7 @@ class tv_media(media.media_file):
         else:
             filename = "{0} s{1}e{2} {3}{4}".format(show_name, season, episode, title, extension)
         subdirectory = [show_name, "Season {0}".format(season)]
-        super(tv_media, self).__init__(destination, filename, media.media_type.TV, subdirectory)
+        super(tv_media, self).__init__(destination, filename, media_file.media_type.TV, subdirectory)
         self.show_name = show_name
         self.season = season
         self.episode = episode 

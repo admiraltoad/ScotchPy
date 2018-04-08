@@ -2,6 +2,7 @@
     Rename Files
 """
 from media import media_utils
+import file_utils
 import application as app
 import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree
@@ -94,18 +95,6 @@ def get_root_directory():
     """ Return the calling directory. """
     return os.path.abspath(".") + "\\"
 
-def rename_file(source, destination):
-    """ Report and rename [source] file to [destination]. """
-    if not os.path.isfile(destination):
-        print(" << " + source)
-        print(" >> " + destination)                     
-        os.rename(source, destination) 
-
-def rreplace(string, replace_this, with_this, repeat=1):
-    """ Reverse replace. Replace starting from the last instance. """
-    li = string.rsplit(replace_this, repeat)
-    return with_this.join(li)
-
 def rename_filename(filename, replace_this, with_this="", repeat=1, starts_with=False, ends_with=False):
     """ [replace_this] [with_this] in the filename. """
     newfile_name = filename
@@ -114,7 +103,7 @@ def rename_filename(filename, replace_this, with_this="", repeat=1, starts_with=
             newfile_name = newfile_name.replace(replace_this, with_this, repeat)
     elif ends_with == True:
         if newfile_name.endswith(replace_this):
-            newfile_name = rreplace(newfile_name, replace_this, with_this, repeat)
+            newfile_name = file_utils.rreplace(newfile_name, replace_this, with_this, repeat)
     else:
         newfile_name = newfile_name.replace(replace_this, with_this, repeat)
     newfile_name = newfile_name.strip()    
@@ -158,7 +147,7 @@ def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, 
                 ## if the name has changed, report and rename it
                 if newfile_name != filename:
                     newfile_fullpath = os.path.join(search_directory, newfile_name)
-                    rename_file(file_fullpath, newfile_fullpath)
+                    file_utils.rename_file(file_fullpath, newfile_fullpath)
 
 def process_no_arguments(search_directory, arguments):
     """ Process filenames when no arguments (--item/-i) are given. """
@@ -201,7 +190,7 @@ def process_presets(search_directory, recursive=False):
                     ## if the name has changed, report and rename it
                     if newfile_name != filename:
                         newfile_fullpath = os.path.join(search_directory, newfile_name)
-                        rename_file(file_fullpath, newfile_fullpath)
+                        file_utils.rename_file(file_fullpath, newfile_fullpath)
 
 def check_preset():
     """ Return True if the first commandline argument is --preset or -p """
