@@ -6,12 +6,12 @@ import os, string, shutil, sys, errno
 from xml.etree import ElementTree as etree
 
 ## Global Variables 
-major_version = 1
-minor_Version = 0
+MAJOR = 2
+MINOR = 0
 
 def print_header(name):
 	print("----------------------------------------------")
-	print(name + " (v" + str(major_version) + "." + str(minor_Version) + ")")
+	print(name + " (v" + str(MAJOR) + "." + str(MINOR) + ")")
 	print("----------------------------------------------")
 
 def get_system_arguments():

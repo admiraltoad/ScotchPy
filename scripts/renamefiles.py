@@ -178,7 +178,10 @@ def process_presets(search_directory, recursive=False):
                     
                     ## remove all preset xml enteries from filename                    
                     filepath = os.path.dirname(os.path.realpath(__file__))
-                    tree = etree.parse(os.path.join(filepath, "renamefiles.preset.xml"))
+                    preset_xml = os.path.join(filepath, "..", "data", "renamefiles.preset.xml")
+                    if not os.path.isfile(preset_xml):
+                        raise Exception("Missing preset XML file [{0}]".format(preset_xml))
+                    tree = etree.parse(preset_xml)
                     root = tree.getroot()                                        
                     for item in root.iter("item"):        
                         replace_list.append(item.text)
