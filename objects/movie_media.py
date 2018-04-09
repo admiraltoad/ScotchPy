@@ -2,7 +2,7 @@
     pymedia :: movie
     
 """
-from media import media_file
+from ScotchPy.objects import media_file
 
 class movie_media(media_file.media_file):
     

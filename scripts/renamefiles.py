@@ -1,12 +1,12 @@
 """
     Rename Files
 """
-from media import media_utils
-import file_utils
-import application as app
 import os, string, shutil, sys, errno, re, datetime
 from xml.etree import ElementTree as etree
 import argparse
+
+from ScotchPy.utils import media_utils, file_utils
+import ScotchPy.application as app
   
 def get_arguments():  
     """ Define and return a list of command line arguments. """

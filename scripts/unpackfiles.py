@@ -2,8 +2,9 @@
     Unpack Files
 """
 import os, sys, shutil, errno
-import application as app
-import file_utils
+
+from ScotchPy import application as app
+from ScotchPy.utils import folder_utils, file_utils
 
 def get_root_directory():
     """ Return the calling directory. """
@@ -20,7 +21,7 @@ def get_folders_desc(search_directory):
 def remove_empty_folders(search_directory):
 	""" Remove folders under [search_directory] if empty. """
 	for folder in get_folders_desc(search_directory):
-		file_utils.remove_if_empty(folder)
+		folder_utils.remove_if_empty(folder)
 
 def unpackfiles(search_directory):
 	""" Move all files in subdirectories under [search_directory] to root.  """

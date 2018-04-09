@@ -5,9 +5,9 @@
 import os, re, datetime
 import xml.etree.ElementTree as etree
 
-from media import tv_media
-from media import movie_media
-from media import media_file
+from ScotchPy.objects import tv_media
+from ScotchPy.objects import movie_media
+from ScotchPy.objects import media_file
 
 def is_media_file(filename):
     """ Check the file extension to see if it is a media file. """
@@ -95,7 +95,10 @@ def find_tvshow_path(search_directory, tvshow_name):
 def get_tvshow_items():
     """ Returns match items from xml. """
     filepath = os.path.dirname(os.path.realpath(__file__))
-    tree = etree.parse(os.path.join(filepath,"tvshow.match.xml"))
+    tvshow_match_xml = os.path.join(filepath, "..", "data", "tvshow.match.xml")
+    if not os.path.isfile(tvshow_match_xml):
+        raise Exception("Missing match XML file [{0}]".format(tvshow_match_xml))
+    tree = etree.parse(tvshow_match_xml)
     root = tree.getroot()   
     return root.iter("item")
     

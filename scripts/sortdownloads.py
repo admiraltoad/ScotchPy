@@ -1,12 +1,13 @@
 """
     Sort Downloads
 """
-from media import media_utils
-import config, renamefiles, file_utils
-import application as app
 import argparse
 import os, string, shutil, sys, errno, time, filecmp
-   
+
+from ScotchPy.utils import media_utils, file_utils, folder_utils
+from ScotchPy import config
+from ScotchPy  import application as app
+
 def get_arguments():    
     """ Define and return a list of command line arguments. """
     parser = argparse.ArgumentParser(description="Sort Downloads") 
@@ -64,7 +65,7 @@ def sort_movies(search_directory, movie_destination):
 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
-            file_utils.remove_if_empty(os.path.join(root, directory))  
+            folder_utils.remove_if_empty(os.path.join(root, directory))  
 
         for filename in filenames:
             filepath = os.path.join(root, filename)
@@ -77,7 +78,7 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
-            file_utils.remove_if_empty(os.path.join(root, directory))       
+            folder_utils.remove_if_empty(os.path.join(root, directory))       
          
         for filename in filenames:
             filepath = os.path.join(root, filename)

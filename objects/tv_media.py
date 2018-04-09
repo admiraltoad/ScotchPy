@@ -2,7 +2,7 @@
     Television
     
 """
-from media import media_file
+from ScotchPy.objects import media_file
 
 class tv_media(media_file.media_file):
 
