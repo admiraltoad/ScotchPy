@@ -45,6 +45,16 @@ def get_filename_year(filename):
                 new_filename = filename.replace(year_string, "")
     return new_filename, filename_year
 
+def get_remove_files():
+    """ Returns remove file items from xml. """
+    filepath = os.path.dirname(os.path.realpath(__file__))
+    tvshow_match_xml = os.path.join(filepath, "..", "data", "sortdownloads.remove.xml")
+    if not os.path.isfile(tvshow_match_xml):
+        raise Exception("Missing match XML file [{0}]".format(tvshow_match_xml))
+    tree = etree.parse(tvshow_match_xml)
+    root = tree.getroot() 
+    return root.iter("item")
+
 ######################## Television Media ########################
 
 def find_episode_pattern(filename):

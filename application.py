@@ -15,6 +15,7 @@ def print_header(name):
 	print("----------------------------------------------")
 
 def get_system_arguments():
+    """  """
     sys_argv = list(sys.argv)
     sys_argv.pop(0) ## remove filepath from the system arguments
     if len(sys_argv) == 0:
@@ -24,12 +25,14 @@ def get_system_arguments():
 def query_yes_no(question, default=None):
     """Ask a yes/no question via input() and return their answer.
 
-    :question - is a string that is presented to the user.
-    :default - is the presumed answer if the user just hits <Enter>.
-        It must be "yes" (the default), "no" or None (meaning
-        an answer is required of the user).
+    Args:
+        question - is a string that is presented to the user.
+        default - is the presumed answer if the user just hits <Enter>.
+            It must be "yes" (the default), "no" or None (meaning
+            an answer is required of the user).
 
-    :return - True for "yes" or False for "no".
+    Return:
+        True for "yes" or False for "no".
     """
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}

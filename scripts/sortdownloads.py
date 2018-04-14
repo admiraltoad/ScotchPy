@@ -47,7 +47,14 @@ def get_movie_path():
         raise Exception("Definition for <movies> is missing from config.xml")
     else:
         return destination.text
-        
+
+def should_remove_file(filename):
+    """ """
+    for item in media_utils.get_remove_files():
+        if filename.lower() == item.text.lower():
+            return True
+    return False
+
 def get_tv_path():
     """ Get the tv show directory from the configuration file. """
     destination = config.get_value('tv')
@@ -70,9 +77,13 @@ def sort_movies(search_directory, movie_destination):
         for filename in filenames:
             filepath = os.path.join(root, filename)
             if os.path.isfile(filepath):
-                new_media = media_utils.create_media_file(movie_destination, filename)
-                if new_media.is_movie():                     
-                    file_utils.move_file(filepath, new_media.get_full_path())                       
+                print(filename)
+                if should_remove_file(filename):
+                    os.remove(filepath)
+                else:
+                    new_media = media_utils.create_media_file(movie_destination, filename)
+                    if new_media.is_movie():                     
+                        file_utils.move_file(filepath, new_media.get_full_path())                       
         
 def sort_tv(search_directory, tvshow_destination, remove_title=False):    
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
@@ -82,17 +93,20 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
          
         for filename in filenames:
             filepath = os.path.join(root, filename)
-            if os.path.isfile(filepath):                 
-                new_media = media_utils.create_media_file(tvshow_destination, filename, remove_title)
-                if new_media.is_tv():
-                    if not os.path.isdir(new_media.get_destination()):
-                        os.makedirs(new_media.get_destination())
-                    current_path = new_media.get_destination()
-                    for subdir in new_media.get_subdirectories():
-                        current_path = os.path.join(current_path, subdir)
-                        if not os.path.exists(current_path):
-                            os.makedirs(current_path)                    
-                    file_utils.move_file(filepath, new_media.get_full_path())  
+            if os.path.isfile(filepath):   
+                if should_remove_file(filename):
+                    os.remove(filepath)
+                else:              
+                    new_media = media_utils.create_media_file(tvshow_destination, filename, remove_title)
+                    if new_media.is_tv():
+                        if not os.path.isdir(new_media.get_destination()):
+                            os.makedirs(new_media.get_destination())
+                        current_path = new_media.get_destination()
+                        for subdir in new_media.get_subdirectories():
+                            current_path = os.path.join(current_path, subdir)
+                            if not os.path.exists(current_path):
+                                os.makedirs(current_path)                    
+                        file_utils.move_file(filepath, new_media.get_full_path())  
                             
 if __name__ == "__main__":
     try:
