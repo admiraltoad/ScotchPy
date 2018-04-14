@@ -6,7 +6,7 @@ Configuration:
 Create a 'config.xml' file in the data folder. See: 'examples\config.xml'
 
 Scripts:
- - sortdownloads
-      *requires* <tv>, <movie> in config.xml 
+ - sortdownloads 
+    - *requires* \<tv\>, \<movie\> in config.xml     
  - renamefiles
  - unpackfiles
