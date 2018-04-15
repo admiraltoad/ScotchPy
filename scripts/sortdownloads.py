@@ -48,10 +48,13 @@ def get_movie_path():
     else:
         return destination.text
 
-def should_remove_file(filename):
+def should_remove_file(filepath):
     """ """
+    filename, extension = os.path.splitext(filepath)
+    if extension.lower() in [".nfo"]:
+        return True
     for item in media_utils.get_remove_files():
-        if filename.lower() == item.text.lower():
+        if filepath.lower() == item.text.lower():
             return True
     return False
 
@@ -77,7 +80,6 @@ def sort_movies(search_directory, movie_destination):
         for filename in filenames:
             filepath = os.path.join(root, filename)
             if os.path.isfile(filepath):
-                print(filename)
                 if should_remove_file(filename):
                     os.remove(filepath)
                 else:

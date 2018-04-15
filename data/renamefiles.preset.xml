@@ -26,19 +26,25 @@
     <item>x264</item>
     <item>H264</item>
     <item>h264</item>
+    <item>H 264</item>
+    <item>h 264</item>
     <item>AAC</item>
     <item>AAC2</item>
     <item>AC3</item>
-    <item>DD5</item> 
+    <item>DD5</item>
+    <item>DDP5</item> 
     <item>DTS</item>
     <item>WEB</item>  
+    <item>XVID</item>
+    <item>YIFY</item>
     <!-- Torrenter Tags  -->
     <item>[ettv]</item>
-    <item>XVID</item>
-    <item>Hive-CM8</item>
+    <item>[ETRG]</item>
+    <item>[YTS AG]</item>    
     <item>[eztv]</item>
+    <item>-Hive-CM8</item>
     <item>-FGT</item>
-    <item>0-STUTTERSHIT</item>   
+    <item>-STUTTERSHIT</item>   
     <item>-DRONES</item>
     <item>-SPARKS</item>
     <item>-RARBG</item>
@@ -51,15 +57,13 @@
     <item>-BATV</item>
     <item>-ViSUM</item>
     <item>-juggs</item>
-    <item>YIFY</item>
-    <item>[ETRG]</item>
-    <item>[YTS AG]</item>
+    <item>-YIFY</item>
     <item>-NOGRP</item>
 	<item>-EVO</item>	
 	<item>-x0r</item>	
-	<item>BOKUTOX</item>
+	<item>-BOKUTOX</item>
     <item>-AMIABLE</item>
-	<item>ShAaNiG</item>	
+	<item>-ShAaNiG</item>	
     <item>-KILLERS</item>
     <item>-AVS</item>
     <item>-MiNDTHEGAP</item>
@@ -74,9 +78,10 @@
     <item>-geckos</item>
     <item>-GECKOS</item>
     <item>-SHITBOX</item>
-    <item>bitloks</item>
+    <item>-bitloks</item>
     <item>-REFiNED</item>
     <item>-sparks</item>
     <item>-lol</item>
     <item>-LEGi0N</item>
+    <item>-NTG</item>
 </root>

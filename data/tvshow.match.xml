@@ -6,10 +6,18 @@
   </item>
   <item>
     <name>Agents of S H I E L D</name>
-    <match>Agents of SHIELD</match>
+    <match>Agents of S.H.I.E.L.D</match>
+  </item>
+    <item>
+    <name>Agents of SHIELD</name>
+    <match>Agents of S.H.I.E.L.D</match>
   </item>
   <item>
     <name>SNL</name>
     <match>Saturday Night Live</match>
+  </item>
+    <item>
+    <name>The Last O G</name>
+    <match>The Last O.G.</match>
   </item>
 </root>

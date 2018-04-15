@@ -92,13 +92,14 @@ def get_episode_info(filename):
     return episode_tag, season, episode
 
 def find_tvshow_path(search_directory, tvshow_name):    
-    """ Find [tvshow_name] folder name in [search_directory].  """  
+    """ Find [tvshow_name] folder name in [search_directory].  """
+    show_name = tvshow_name if tvshow_name.endswith(".") == False else tvshow_name[:-1]  
     tvshow_path = None
     for root, directories, files in os.walk(search_directory): 
         for directory in directories:              
             subdirectory = os.path.join(root, directory)
             if os.path.isdir(subdirectory):
-                if directory.lower() == tvshow_name.lower():
+                if directory.lower() == show_name.lower():
                     return os.path.abspath(os.path.join(subdirectory, os.pardir))
     return tvshow_path
 
@@ -120,7 +121,7 @@ def process_tvshow_name(tvshow_name):
             break      
         name = item.find("name").text
         if name.lower() == tvshow_name.lower():
-            tvshow_match = item.find("match").text                  
+            tvshow_match = item.find("match").text                 
     return tvshow_name if tvshow_match is None else tvshow_match
 
 ######################## Object Creation ########################
@@ -142,8 +143,8 @@ def create_tv_media(filename, extension, destination, remove_title = False):
             raise Exception("Failed to process filename as tv show pattern.")
         tag_start = int(filename.find(episode_tag))
         tag_end = int(tag_start + len(episode_tag))             
-        showname = (filename[:tag_start]).strip()  
-        showname = process_tvshow_name(showname)      
+        showname = (filename[:tag_start]).strip()
+        showname = process_tvshow_name(showname)    
         showname, tvshow_year = get_filename_year(showname)
         if tvshow_year is not None:
             showname = "{0} ({1})".format(showname, tvshow_year)
@@ -162,7 +163,7 @@ def create_media_file(destination, filename, remove_title=False):
     if is_media_file(filename):   
         newfile_name, extension = os.path.splitext(filename)
         newfile_name = newfile_name.replace("."," ")        
-        if is_tv_media(newfile_name):  
+        if is_tv_media(newfile_name):                  
             new_media_file = create_tv_media(newfile_name, extension, destination, remove_title) 
         elif is_movie_media(newfile_name):
             new_media_file = create_movie_media(newfile_name, extension, destination)
