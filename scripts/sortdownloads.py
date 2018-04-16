@@ -124,5 +124,4 @@ if __name__ == "__main__":
         sys.exit(0)
     except Exception as ex:
         print("Error:", str(ex), "\n")
-        raise
         sys.exit(-1)

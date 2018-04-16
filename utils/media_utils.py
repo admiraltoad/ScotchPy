@@ -50,7 +50,7 @@ def get_remove_files():
     filepath = os.path.dirname(os.path.realpath(__file__))
     tvshow_match_xml = os.path.join(filepath, "..", "data", "sortdownloads.remove.xml")
     if not os.path.isfile(tvshow_match_xml):
-        raise Exception("Missing match XML file [{0}]".format(tvshow_match_xml))
+        raise Exception("[!] Missing match XML file '{0}'".format(tvshow_match_xml))
     tree = etree.parse(tvshow_match_xml)
     root = tree.getroot() 
     return root.iter("item")
@@ -108,7 +108,7 @@ def get_tvshow_items():
     filepath = os.path.dirname(os.path.realpath(__file__))
     tvshow_match_xml = os.path.join(filepath, "..", "data", "tvshow.match.xml")
     if not os.path.isfile(tvshow_match_xml):
-        raise Exception("Missing match XML file [{0}]".format(tvshow_match_xml))
+        raise Exception("[!] Missing match XML file '{0}'".format(tvshow_match_xml))
     tree = etree.parse(tvshow_match_xml)
     root = tree.getroot()   
     return root.iter("item")
@@ -140,7 +140,7 @@ def create_tv_media(filename, extension, destination, remove_title = False):
     if find_episode_pattern(filename) is not None:
         episode_tag, season, episode = get_episode_info(filename)
         if episode_tag is None:
-            raise Exception("Failed to process filename as tv show pattern.")
+            raise Exception("[!] Failed to process filename as tv show pattern.")
         tag_start = int(filename.find(episode_tag))
         tag_end = int(tag_start + len(episode_tag))             
         showname = (filename[:tag_start]).strip()

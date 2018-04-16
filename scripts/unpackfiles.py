@@ -33,7 +33,11 @@ def unpackfiles(search_directory):
 				file_utils.move_file(source_filename, destination)		
 	remove_empty_folders(search_directory)
 
-if __name__ == "__main__":   					
-    app.print_header("Unpack Files")
-    unpackfiles(get_root_directory())
-    sys.exit(0)
+if __name__ == "__main__":   	
+	try:
+		app.print_header("Unpack Files")
+		unpackfiles(get_root_directory())
+		sys.exit(0)
+    except Exception as ex:
+        print("Error:", str(ex), "\n")        
+        sys.exit(-1)				

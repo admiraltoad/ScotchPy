@@ -220,6 +220,5 @@ if __name__ == "__main__":
                 
         sys.exit(0)
     except Exception as ex:
-        print("Error:", str(ex), "\n")
-        raise        
+        print("Error:", str(ex), "\n")       
         sys.exit(-1)    
