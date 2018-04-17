@@ -9,12 +9,12 @@ class tv_media(media_file.media_file):
     def __init__(self, show_name, season, episode, title, extension, destination):
         filename = ""
         if title == "" or title is None:
-            filename = "{0} s{1}e{2}{3}".format(show_name, season, episode, extension) 
+            filename = "{0} s{1}e{2}".format(show_name, season, episode) 
         else:
-            filename = "{0} s{1}e{2} {3}{4}".format(show_name, season, episode, title, extension)
+            filename = "{0} s{1}e{2} {3}".format(show_name, season, episode, title)
         
         subdirectory = [show_name, "Season {0}".format(season)]
-        super(tv_media, self).__init__(destination, filename, media_file.media_type.TV, subdirectory)
+        super(tv_media, self).__init__(destination, filename, extension, media_file.media_type.TV, subdirectory)
         self.show_name = show_name
         self.season = season
         self.episode = episode 

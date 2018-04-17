@@ -28,14 +28,15 @@ class base_file():
 
 class media_file(base_file):
     """  """
-    def __init__(self, destination, filename, type = media_type.MISC, subdirectories = []):
+    def __init__(self, destination, filename, extension, type = media_type.MISC, subdirectories = []):
         if filename is None or filename == "":
             raise Exception("Invalid media file filename. [{0}]".format(filename))
         if type not in media_type:
             raise Exception("Invalid media file type. [{1}]".format(str(type)))
         self.type = type           
         self.destination = destination
-        self.filename = filename  
+        self.filename = filename
+        self.extension = extension  
         self.subdirectories = [] if subdirectories is None else subdirectories
 
     def is_tv(self):
@@ -47,6 +48,9 @@ class media_file(base_file):
     def get_filename(self):
         return self.filename
 
+    def get_extension(self):
+        return self.extension
+
     def get_destination(self):
         return self.destination
 
@@ -57,4 +61,4 @@ class media_file(base_file):
         return os.path.join(self.destination, *self.subdirectories)
 
     def get_full_path(self):
-        return os.path.join(self.get_full_destination(), self.filename)
+        return os.path.join(self.get_full_destination(), "{0}{1}".format(self.filename, self.extension))

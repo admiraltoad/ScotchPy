@@ -1,5 +1,5 @@
 <root>
 <tv>D:\Videos\TVShows</tv>
 <movies>D:\Videos\Movies</movies>
-<sortdownloads>D:\Videos</sortdownloads>
+<ffmpeg>C:\Programs\ffmpeg\bin</ffmpeg>
 </root>

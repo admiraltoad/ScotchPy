@@ -168,5 +168,5 @@ def create_media_file(destination, filename, remove_title=False):
         elif is_movie_media(newfile_name):
             new_media_file = create_movie_media(newfile_name, extension, destination)
         else:
-            new_media_file = media_file.media_file(destination, filename)
+            new_media_file = media_file.media_file(destination, filename, extension)
     return new_media_file   

@@ -2,7 +2,7 @@
     Sort Downloads
 """
 import argparse
-import os, string, shutil, sys, errno, time, filecmp
+import os, string, shutil, sys, errno, time, filecmp, subprocess
 
 from ScotchPy.utils import media_utils, file_utils, folder_utils
 from ScotchPy import config
@@ -68,6 +68,24 @@ def get_tv_path():
     else:
         return destination.text
 
+def set_file_metadata(filepath, title, extension, output_file = None):
+    """ """
+    ffmpeg_path = config.get_value("ffmpeg")
+    if ffmpeg_path is not None:
+        output_file = output_file if output_file is not None else filepath
+        ffmpeg_exe = os.path.join(ffmpeg_path, "ffmpeg.exe")
+
+        cmd = None
+        if extension.lower() in (".mov", ".mp4", ".m4a"):        
+            cmd = '{0} -v 0 -y -i "{1}" -metadata title="{2}" comment="" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)  
+        if extension.lower() in (".mkv"):        
+            cmd = '{0} -v 0 -y -i "{1}" -metadata title="{2}" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)       
+        elif extension.lower() in (".avi"):        
+            cmd = '{0} -v 0 -y -i "{1}" -metadata INAM="{2}" ICMT="" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)
+        if cmd is not None:        
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            out, err = p.communicate()        
+
 def sort_movies(search_directory, movie_destination):    
     """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """     
     if not os.path.isdir(movie_destination):
@@ -84,8 +102,9 @@ def sort_movies(search_directory, movie_destination):
                     os.remove(filepath)
                 else:
                     new_media = media_utils.create_media_file(movie_destination, filename)
-                    if new_media.is_movie():                     
-                        file_utils.move_file(filepath, new_media.get_full_path())                       
+                    if new_media.is_movie():
+                        file_utils.move_file(filepath, new_media.get_full_path())                        
+                        set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())                       
         
 def sort_tv(search_directory, tvshow_destination, remove_title=False):    
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
@@ -108,7 +127,8 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
                             current_path = os.path.join(current_path, subdir)
                             if not os.path.exists(current_path):
                                 os.makedirs(current_path)                    
-                        file_utils.move_file(filepath, new_media.get_full_path())  
+                        file_utils.move_file(filepath, new_media.get_full_path())
+                        set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())
                             
 if __name__ == "__main__":
     try:
