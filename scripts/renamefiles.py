@@ -138,7 +138,7 @@ def rename_files_in_dir(search_directory, replace_list, with_this="", repeat=1, 
             if os.path.isfile(file_fullpath): 
                 newfile_name, extension = os.path.splitext(filename)
                 if media_only:
-                    if media_utils.is_media_file(filename):
+                    if media_utils.is_MediaFile(filename):
                         newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
                 else:
                     newfile_name = rename_filename_from_list(newfile_name, replace_list, with_this, repeat, starts_with, ends_with)
@@ -170,7 +170,7 @@ def process_presets(search_directory, recursive=False):
         for filename in filenames:
             file_fullpath = os.path.join(search_directory, filename)
             if os.path.isfile(file_fullpath): 
-                if media_utils.is_media_file(filename):    
+                if media_utils.is_MediaFile(filename):    
                     newfile_name, extension = os.path.splitext(filename)
 
                     replace_list = []
@@ -204,9 +204,9 @@ def check_preset():
     return False
 
 if __name__ == "__main__":   
-    try:
-        app.print_header("Rename Files")
-        
+    try:        
+        main_app = app.Application("Rename Files")
+
         check, args = get_arguments()
         if check == False:
             process_no_arguments(get_root_directory(), args)
@@ -220,5 +220,6 @@ if __name__ == "__main__":
                 
         sys.exit(0)
     except Exception as ex:
-        print("Error:", str(ex), "\n")       
+        print("Error:", str(ex), "\n")
+        raise     
         sys.exit(-1)    

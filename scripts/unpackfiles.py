@@ -35,9 +35,11 @@ def unpackfiles(search_directory):
 
 if __name__ == "__main__":   	
 	try:
-		app.print_header("Unpack Files")
+		main_app = app.Application("Unpack Files")
+
 		unpackfiles(get_root_directory())
 		sys.exit(0)
-    except Exception as ex:
-        print("Error:", str(ex), "\n")        
-        sys.exit(-1)				
+	except Exception as ex:
+		print("Error:", str(ex), "\n")
+		raise        
+		sys.exit(-1)				

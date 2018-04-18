@@ -5,24 +5,24 @@
 import os, re, datetime
 import xml.etree.ElementTree as etree
 
-from ScotchPy.objects import tv_media
-from ScotchPy.objects import movie_media
-from ScotchPy.objects import media_file
+from ScotchPy.objects import TVMedia
+from ScotchPy.objects import MovieMedia
+from ScotchPy.objects import MediaFile
 
-def is_media_file(filename):
+def is_MediaFile(filename):
     """ Check the file extension to see if it is a media file. """
     newfile_name, extension = os.path.splitext(filename)
     if newfile_name != "" and newfile_name is not None:
         return extension in ('.avi','.mkv','.mp4', '.mpg', '.xvid', '.mov')
     return False 
 
-def is_tv_media(filename):
+def is_TVMedia(filename):
     """ Check if the [filename] is a tv format 'name s#e# *title*'. """
     return find_episode_pattern(filename) is not None
 
-def is_movie_media(filename):
+def is_MovieMedia(filename):
     """ Check if the [filename] is a movie format 'name (year)'. """
-    if not is_tv_media(filename):
+    if not is_TVMedia(filename):
         movie_name, movie_year = get_filename_year(filename)
         if movie_year is not None:
             return True
@@ -126,16 +126,16 @@ def process_tvshow_name(tvshow_name):
 
 ######################## Object Creation ########################
 
-def create_movie_media(filename, extension, destination):
-    """ Create a new movie_media object. """
+def create_MovieMedia(filename, extension, destination):
+    """ Create a new MovieMedia object. """
     movie_file = None
     movie_name, movie_year = get_filename_year(filename)
     if movie_year is not None:
-        movie_file = movie_media.movie_media(movie_name, movie_year, extension, destination)
+        movie_file = MovieMedia.MovieMedia(movie_name, movie_year, extension, destination)
     return movie_file
 
-def create_tv_media(filename, extension, destination, remove_title = False):
-    """ Create a new tv_media object. """
+def create_TVMedia(filename, extension, destination, remove_title = False):
+    """ Create a new TVMedia object. """
     tv_file = None
     if find_episode_pattern(filename) is not None:
         episode_tag, season, episode = get_episode_info(filename)
@@ -154,19 +154,19 @@ def create_tv_media(filename, extension, destination, remove_title = False):
         tvshow_destination = find_tvshow_path(destination, showname)
         if tvshow_destination is None:
             tvshow_destination = destination
-        tv_file = tv_media.tv_media(showname, season, episode, episode_title, extension, tvshow_destination)
+        tv_file = TVMedia.TVMedia(showname, season, episode, episode_title, extension, tvshow_destination)
     return tv_file
 
-def create_media_file(destination, filename, remove_title=False):
+def create_MediaFile(destination, filename, remove_title=False):
     """ Process [filename] to determine if it is a tv or movie media file.  """ 
-    new_media_file = media_file.base_file()
-    if is_media_file(filename):   
+    new_MediaFile = MediaFile.BaseFile()
+    if is_MediaFile(filename):   
         newfile_name, extension = os.path.splitext(filename)
         newfile_name = newfile_name.replace("."," ")        
-        if is_tv_media(newfile_name):                  
-            new_media_file = create_tv_media(newfile_name, extension, destination, remove_title) 
-        elif is_movie_media(newfile_name):
-            new_media_file = create_movie_media(newfile_name, extension, destination)
+        if is_TVMedia(newfile_name):                  
+            new_MediaFile = create_TVMedia(newfile_name, extension, destination, remove_title) 
+        elif is_MovieMedia(newfile_name):
+            new_MediaFile = create_MovieMedia(newfile_name, extension, destination)
         else:
-            new_media_file = media_file.media_file(destination, filename, extension)
-    return new_media_file   
+            new_MediaFile = MediaFile.MediaFile(destination, filename, extension)
+    return new_MediaFile   

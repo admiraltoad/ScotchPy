@@ -31,7 +31,14 @@ def get_arguments():
         required=False, 
         action="store_true",
         help="Removes the tvshow episode title when sorting downloads."
-        )                
+        )
+    parser.add_argument(
+        "--set_metadata", 
+        "-s", 
+        required=False, 
+        action="store_true",
+        help="Sets metadata on file based on new filename."
+        )              
     parser.set_defaults(movies_only=False,tv_only=False,remove_title=False)
  
     return parser.parse_args(args=app.get_system_arguments())
@@ -73,20 +80,20 @@ def set_file_metadata(filepath, title, extension, output_file = None):
     ffmpeg_path = config.get_value("ffmpeg")
     if ffmpeg_path is not None:
         output_file = output_file if output_file is not None else filepath
-        ffmpeg_exe = os.path.join(ffmpeg_path, "ffmpeg.exe")
+        ffmpeg_exe = os.path.join(ffmpeg_path.text, "ffmpeg.exe")
 
-        cmd = None
-        if extension.lower() in (".mov", ".mp4", ".m4a"):        
-            cmd = '{0} -v 0 -y -i "{1}" -metadata title="{2}" comment="" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)  
-        if extension.lower() in (".mkv"):        
-            cmd = '{0} -v 0 -y -i "{1}" -metadata title="{2}" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)       
+        commands = []
+        if extension.lower() in (".mkv", ".mov", ".mp4", ".m4a"):        
+            commands.append('"{0}" -v 0 -y -i "{1}" -metadata title="{2}" "{3}"'.format(ffmpeg_exe, filepath, title, output_file))
+            commands.append('"{0}" -v 0 -y -i "{1}" -metadata comment="" "{2}"'.format(ffmpeg_exe, filepath, output_file))
         elif extension.lower() in (".avi"):        
-            cmd = '{0} -v 0 -y -i "{1}" -metadata INAM="{2}" ICMT="" "{3}"'.format(ffmpeg_exe, filepath, title, output_file)
-        if cmd is not None:        
+            commands.append('"{0}" -v 0 -y -i "{1}" -metadata INAM="{2}" "{3}"'.format(ffmpeg_exe, filepath, title, output_file))
+            commands.append('"{0}" -v 0 -y -i "{1}" -metadata ICMT="" "{2}"'.format(ffmpeg_exe, filepath, output_file))
+        for cmd in commands:                    
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-            out, err = p.communicate()        
+            p.communicate()        
 
-def sort_movies(search_directory, movie_destination):    
+def sort_movies(search_directory, movie_destination, set_metadata=False):    
     """ Move video files that match a given pattern from [search_directory] into [movie_destination].   """     
     if not os.path.isdir(movie_destination):
         os.makedirs(movie_destination)  
@@ -101,12 +108,13 @@ def sort_movies(search_directory, movie_destination):
                 if should_remove_file(filename):
                     os.remove(filepath)
                 else:
-                    new_media = media_utils.create_media_file(movie_destination, filename)
+                    new_media = media_utils.create_MediaFile(movie_destination, filename)
                     if new_media.is_movie():
-                        file_utils.move_file(filepath, new_media.get_full_path())                        
-                        set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())                       
+                        file_utils.move_file(filepath, new_media.get_full_path())     
+                        if set_metadata:                   
+                            set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())                       
         
-def sort_tv(search_directory, tvshow_destination, remove_title=False):    
+def sort_tv(search_directory, tvshow_destination, remove_title=False, set_metadata=False):    
     """ Move video files that match a given pattern from [search_directory] into [tvshow_destination].  """ 
     for root, directories, filenames in os.walk(search_directory):
         for directory in directories:
@@ -118,7 +126,7 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
                 if should_remove_file(filename):
                     os.remove(filepath)
                 else:              
-                    new_media = media_utils.create_media_file(tvshow_destination, filename, remove_title)
+                    new_media = media_utils.create_MediaFile(tvshow_destination, filename, remove_title)
                     if new_media.is_tv():
                         if not os.path.isdir(new_media.get_destination()):
                             os.makedirs(new_media.get_destination())
@@ -128,20 +136,22 @@ def sort_tv(search_directory, tvshow_destination, remove_title=False):
                             if not os.path.exists(current_path):
                                 os.makedirs(current_path)                    
                         file_utils.move_file(filepath, new_media.get_full_path())
-                        set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())
+                        if set_metadata:
+                            set_file_metadata(new_media.get_full_path(), new_media.get_filename(), new_media.get_extension())
                             
 if __name__ == "__main__":
     try:
-        app.print_header("Sort Downloads")   
-
+        main_app = app.Application("Sort Downloads")
+        
         args = get_arguments()
         run_all = not args.tv_only and not args.movies_only
         if args.tv_only or run_all:
-            sort_tv(get_root_directory(), get_tv_path(), args.remove_title)
+            sort_tv(get_root_directory(), get_tv_path(), args.remove_title, args.set_metadata)
         if args.movies_only or run_all:
-            sort_movies(get_root_directory(), get_movie_path())
+            sort_movies(get_root_directory(), get_movie_path(), args.set_metadata)
             
         sys.exit(0)
     except Exception as ex:
         print("Error:", str(ex), "\n")
+        raise
         sys.exit(-1)
