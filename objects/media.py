@@ -67,7 +67,7 @@ class MovieMedia(MediaFile):
     
     def __init__(self, movie_name, year, extension, destination):
         filename = "{0} ({1})".format(movie_name, year)
-        super(MovieMedia, self).__init__(destination, filename, extension, mf.MediaType.MOVIE)
+        super(MovieMedia, self).__init__(destination, filename, extension, MediaType.MOVIE)
         self.movie_name = movie_name
         self.year = year
 
@@ -87,7 +87,7 @@ class TVMedia(MediaFile):
             filename = "{0} s{1}e{2} {3}".format(show_name, season, episode, title)
         
         subdirectory = [show_name, "Season {0}".format(season)]
-        super(TVMedia, self).__init__(destination, filename, extension, mf.MediaType.TV, subdirectory)
+        super(TVMedia, self).__init__(destination, filename, extension, MediaType.TV, subdirectory)
         self.show_name = show_name
         self.season = season
         self.episode = episode 

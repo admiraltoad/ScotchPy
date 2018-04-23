@@ -45,7 +45,11 @@ class Application():
         """ """
         print("-"*24)
         print("{0} ({1})".format(self.name, self.version))
-        print("-"*24)            
+        print("-"*24)     
+
+def get_root_directory():
+    """ Return the calling directory. """
+    return os.path.abspath(".") + "\\"       
 
 def get_system_arguments():
     """  """

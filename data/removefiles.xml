@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<root>
+  <!-- Extensions to Remove -->
+  <ext>.idx</ext>
+  <ext>.nfo</ext>
+  <!-- Files to Remove -->
+  <file>rarbg.txt</file>
+  <file>rarbg.com.txt</file>
+</root>
