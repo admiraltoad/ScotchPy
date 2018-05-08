@@ -37,6 +37,9 @@
     <item>WEB</item>  
     <item>XVID</item>
     <item>YIFY</item>
+    <item>REMASTERED</item>
+    <item>EXTENDED</item>
+    <item>UNCUT</item>
     <!-- Torrenter Tags  -->
     <item>[ettv]</item>
     <item>[ETRG]</item>
@@ -85,6 +88,7 @@
     <item>-LEGi0N</item>
     <item>-NTG</item>
     <item>-HDC</item>
+    <item>-ViGi</item>
     <!-- Formatting Leftovers -->
     <item>  1</item>
     <item>  -</item>

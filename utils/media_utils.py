@@ -30,40 +30,57 @@ def get_filename_year(filename):
     """ Search for a year at the end of the filename. Return them seperately. """
     new_filename = filename
     filename_year = None
-    match = re.search("\s\(\d+\)", new_filename)
-    if match is None:
-        match = re.search("\s\d+", new_filename)
-    if match is not None:    
-        now = datetime.datetime.now()
-        year_string = match.group()
+    matches = re.findall("\s\(\d+\)", new_filename)
+    if not matches:
+        matches = re.findall("\s\d+", new_filename)
+    if matches:            
+        match = matches[-1] # last match
+        now = datetime.datetime.now()        
+        year_string = str(match)
         year = int(year_string.replace("(", "").replace(")", ""))
         if new_filename.endswith(year_string):
             if year > 1945 and year <= now.year:                        
                 filename_year = str(year)
-                new_filename = filename.replace(year_string, "")
+                new_filename = filename.replace(year_string, "")                
     return new_filename, filename_year
 
 ######################## Television Media ########################
 
 def find_episode_pattern(filename):
     """ Find tv episode pattern (season #, episode #) in [filename]. """ 
-    found = re.search("\ss\d+\se\d+", filename) 
-    if not found:
-        found = re.search("\ss\d+e\d+", filename)       
-    if not found:
-        found = re.search("\sS\d+\sE\d+", filename) 
-    if not found:
-        found = re.search("\sS\d+E\d+", filename)       
-    if not found:
-        found = re.search("\sS\d+\se\d+", filename) 
-    if not found:
-        found = re.search("\sS\d+e\d+", filename)
-    if not found:
-        found = re.search("\ss\d+\sE\d+", filename)
-    if not found:
-        found = re.search("\ss\d+E\d+", filename)
-    if found is not None:
-        found = found.group(0).strip() 
+    print("A:", filename)
+    patterns = []
+    patterns.append("\ss\d+\se\d+")     
+    patterns.append("\ss\d+e\d+")
+    patterns.append("\sS\d+\sE\d+") 
+    patterns.append("\sS\d+E\d+")  
+    patterns.append("\sS\d+\se\d+") 
+    patterns.append("\sS\d+e\d+")
+    patterns.append("\ss\d+\sE\d+")
+    patterns.append("\ss\d+E\d+")
+
+    found = None
+    for pattern in patterns:
+        found = re.search(pattern, filename)
+        if found is not None:
+            found = found.group(0).strip()
+            break
+    print("B:", found)
+    if found is None:
+        patterns = []
+        patterns.append("\sseason\d+episode\d+")
+        patterns.append("\sSeason\d+Episode\d+")
+        patterns.append("\sseason\s\d+episode\s\d+")
+        patterns.append("\sSeason\s\d+Episode\s\d+")
+
+        for pattern in patterns:
+            found = re.search(pattern, filename)
+            print("C:", found)
+            if found is not None:
+                found = found.group(0).split()
+                print(found)
+                break
+
     return found
 
 def get_episode_info(filename):

@@ -131,8 +131,8 @@ class SortDownloadsApp(Application):
 
 if __name__ == "__main__":
     try:
-        app = SortDownloadsApp()
-        app.run()            
+        main = SortDownloadsApp()
+        main.run()            
         sys.exit(0)
     except Exception as ex:
         print("Error:", str(ex), "\n")

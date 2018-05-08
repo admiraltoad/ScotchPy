@@ -39,7 +39,7 @@ def rreplace(string, replace_this, with_this, repeat=1):
     li = string.rsplit(replace_this, repeat)
     return with_this.join(li)
 
-def get_remove_files():
+def get_removefiles_info():
     """ Returns remove file items from xml. """
     filepath = os.path.dirname(os.path.realpath(__file__))
     tvshow_match_xml = os.path.join(filepath, "..", "data", "removefiles.xml")
@@ -47,29 +47,25 @@ def get_remove_files():
         raise Exception("[!] Missing match XML file '{0}'".format(tvshow_match_xml))
     tree = etree.parse(tvshow_match_xml)
     root = tree.getroot() 
-    return root.iter("file")
-
-def get_remove_extensions():
-    """ Returns remove file items from xml. """
-    filepath = os.path.dirname(os.path.realpath(__file__))
-    tvshow_match_xml = os.path.join(filepath, "..", "data", "removefiles.xml")
-    if not os.path.isfile(tvshow_match_xml):
-        raise Exception("[!] Missing match XML file '{0}'".format(tvshow_match_xml))
-    tree = etree.parse(tvshow_match_xml)
-    root = tree.getroot() 
-    return root.iter("ext")
+    return root.iter("file"), root.iter("ext")
 
 def remove_useless_files(search_directory):
-    """ """
+    """ Removes files by name of extension based on rules set in .\data\removefiles.xml.  """
+    r_files, r_extensions = get_removefiles_info()
     for _, _, filenames in os.walk(search_directory):   
         for filename in filenames:
+            removed_current = False
             current_file = os.path.join(search_directory, filename)
-            if os.path.isfile(current_file):
+            if os.path.isfile(current_file):                
                 _, extension = os.path.splitext(filename)
-                for r_ext in get_remove_extensions():
+                for r_ext in r_extensions:
                     if r_ext.text.lower() == extension.lower():
                         remove_file(current_file)
-                else:
-                    for r_file in get_remove_files():
+                        removed_current = True
+                        break
+                if removed_current == False:                                                         
+                    for r_file in r_files:
                         if r_file.text.lower() == filename.lower():
                             remove_file(current_file)
+                            removed_current = True
+                            break

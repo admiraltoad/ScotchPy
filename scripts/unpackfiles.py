@@ -31,8 +31,8 @@ class UnpackFilesApp(Application):
 
 if __name__ == "__main__":   	
 	try:
-		app = UnpackFilesApp()
-		app.run()
+		main = UnpackFilesApp()
+		main.run()
 		sys.exit(0)
 	except Exception as ex:
 		print("Error:", str(ex), "\n")
